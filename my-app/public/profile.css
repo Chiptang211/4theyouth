@@ -37,13 +37,14 @@ input[type="text"] {
 
 /* Vertical Navbar */
 .sidebar {
-  height: calc(100vh - 50px); /* Subtract height of horizontal navbar */
+  height: 100%;
+  /* height: calc(100vh - 50px); /*Subtract height of horizontal navbar*/ 
   width: 200px;
   position: fixed;
   left: 0;
-  top: 50px;
+  top: 0;
   background-color: #9BC675;
-  padding-top: 20px;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center; 
@@ -79,13 +80,20 @@ input[type="text"] {
   border-radius: 50%;
   object-fit: cover;
 }
-
-.contact-box {
-  background-color: white;
-  border : 1px solid white;
-  padding: 20px;
-  margin-top: 100px;
-  width: 100px;}
+.contact-container {
+  position:relative;
+  top:600px;
+  right: 250;
+  width:180px;
+}
+ .contact-box {
+  display:block;
+  background-color: lightgray;
+  border : 10px solid lightgreen;
+  padding: 10px;
+  width:100%;}
+  /* margin-top: 400px;
+  width: 800px;}  */
 
 /* Footer */
 footer {
