@@ -107,7 +107,7 @@ input[type="text"] {
   border-radius: 20px;
   margin-left: 20px; 
   margin-top: 20px;
-  width: 600px; 
+  width: 400px; 
 }
 
 .kids-list {
@@ -132,6 +132,34 @@ input[type="text"] {
   display: flex;
   flex-direction: row;
   margin-top: 20px;
+}
+
+/* Dividing Line */
+hr {
+  border: none;
+  border-top: 5px solid black;
+  margin: 10px 0;
+}
+
+/* Check-in Section */
+.check-in-section {
+  padding: 20px;
+}
+
+.check-in-section h2 {
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+}
+
+select, input[type="checkbox"] {
+  margin-top: 5px;
 }
 
 /* Footer */
