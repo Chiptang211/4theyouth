@@ -1,0 +1,16 @@
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  .agenda-container {
+    display:flex;
+    flex-wrap:wrap;
+    gap:20px;
+  }
+  .daily-agenda {
+    margin-bottom: 20px;
+    border : 1px solid white;
+    padding: 10px;
+    border-radius: 5px;
+  }
