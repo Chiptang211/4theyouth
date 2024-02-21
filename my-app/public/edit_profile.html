@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Profile - 4theYouth</title>
+  <link rel="stylesheet" href="edit_profile.css">
+</head>
+<body>
+  
+<!-- Horizontal Navbar -->
+<div class="topnav">
+  <a href="home.html"><img src="4theYouth.png" alt="Favicon" class="favicon"></a>
+  <input type="text" placeholder="Search">
+  <a href="home.html">Home</a>
+  <a href="#">Forms</a>
+  <a href="messages.html">Messages</a>
+  <a href="#">Settings</a>
+  <div class="profile">
+    <img src="headshot.avif" alt="headshot" class="profile-icon">
+  </div>
+  <a href="profile.html">FirstName LastName</a>
+</div>
+
+<!-- Profile Edit Section -->
+<div class="edit-profile-container">
+  <h2>Edit Profile</h2>
+  <form>
+    <div class="form-group">
+      <label for="profile-picture">Profile Picture:</label>
+      <input type="file" id="profile-picture" name="profile-picture">
+    </div>
+    <div class="form-group">
+      <label for="full-name">Full Name:</label>
+      <input type="text" id="full-name" name="full-name" value="FirstName LastName">
+    </div>
+    <div class="form-group">
+      <label for="kids">Kids:</label><br>
+      <input type="text" id="kids" name="kids" value="Kid 1, Kid 2, Kid 3">
+    </div>
+    <div class="form-group">
+      <label for="parents">Parents/Guardians:</label><br>
+      <input type="text" id="parents" name="parents" value="Parent 1, Parent 2, Aunt">
+    </div>
+    <button type="submit">Save Changes</button>
+  </form>
+</div>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2024 4theYouth All Rights Reserved.</p>
+  <p>
+    Created by Dahira Abukar, Nadia Sheikh, Hung Tran, 
+    Alexei Zhang, Eddie Baghdasaryan, Chip Tang for INFO 442      
+  </p>
+</footer>
+
+</body>
+</html>
