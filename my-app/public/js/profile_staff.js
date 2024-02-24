@@ -68,7 +68,7 @@ function getQueryParam(param) {
 }
 
 function fetchStaffInfo(userId) {
-    fetch(`http://localhost:8000/lookup/staff/info?staffId=${userId}`)
+    fetch(`https://info442.chiptang.com/lookup/staff/info?staffId=${userId}`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('user_name').textContent = data.name;
@@ -86,13 +86,13 @@ function toggleView(activeViewId) {
 }
 
 function fetchEventList(userId) {
-    fetch(`http://localhost:8000/lookup/staff/event?staffId=${userId}`)
+    fetch(`https://info442.chiptang.com/lookup/staff/event?staffId=${userId}`)
         .then(response => response.json())
         .then(eventIds => {
             const eventListDiv = document.getElementById('event_list');
             eventListDiv.innerHTML = '';
             eventIds.forEach(eventId => {
-                fetch(`http://localhost:8000/lookup/event/info?eventId=${eventId}`)
+                fetch(`https://info442.chiptang.com/lookup/event/info?eventId=${eventId}`)
                     .then(response => response.json())
                     .then(eventInfos => {
                         eventInfos.forEach(eventInfo => {
@@ -110,7 +110,7 @@ function fetchEventList(userId) {
 
 
 function fetchEventAndPopulateSelectors(userId) {
-    fetch(`http://localhost:8000/lookup/staff/event?staffId=${userId}`)
+    fetch(`https://info442.chiptang.com/lookup/staff/event?staffId=${userId}`)
         .then(response => response.json())
         .then(eventIds => {
             const eventListDiv = document.getElementById('event_list');
@@ -119,7 +119,7 @@ function fetchEventAndPopulateSelectors(userId) {
             selectors.forEach(selector => {
                 selector.innerHTML = '<option value="">Select an Event</option>';
                 eventIds.forEach(eventId => {
-                    fetch(`http://localhost:8000/lookup/event/info?eventId=${eventId}`)
+                    fetch(`https://info442.chiptang.com/lookup/event/info?eventId=${eventId}`)
                         .then(response => response.json())
                         .then(eventInfos => {
                             eventInfos.forEach(eventInfo => {
@@ -136,10 +136,10 @@ function fetchEventAndPopulateSelectors(userId) {
 
 
 function fetchChildAndPopulateSelectors(eventId) {
-    fetch(`http://localhost:8000/lookup/child/info?childId=all`)
+    fetch(`https://info442.chiptang.com/lookup/child/info?childId=all`)
         .then(response => response.json())
         .then(allChildren => {
-            fetch(`http://localhost:8000/lookup/event/child?eventId=${eventId}`)
+            fetch(`https://info442.chiptang.com/lookup/event/child?eventId=${eventId}`)
                 .then(response => response.json())
                 .then(childrenInEvent => {
                     const childrenInEventIds = new Set(childrenInEvent.map(child => child.child_id));
@@ -162,21 +162,21 @@ function fetchChildAndPopulateSelectors(eventId) {
 
 function fetchChildrenForEvent() {
     const eventId = document.getElementById('child_event_selector').value;
-    fetch(`http://localhost:8000/lookup/event/child?eventId=${eventId}`)
+    fetch(`https://info442.chiptang.com/lookup/event/child?eventId=${eventId}`)
         .then(response => response.json())
         .then(childrenIds => {
             const childrenList = document.getElementById('children_list');
             childrenList.innerHTML = '';
 
             childrenIds.forEach(childId => {
-                fetch(`http://localhost:8000/lookup/child/info?childId=${childId}`)
+                fetch(`https://info442.chiptang.com/lookup/child/info?childId=${childId}`)
                     .then(response => response.json())
                     .then(childInfo => {
-                        fetch(`http://localhost:8000/lookup/child/family?childId=${childId}`)
+                        fetch(`https://info442.chiptang.com/lookup/child/family?childId=${childId}`)
                             .then(response => response.json())
                             .then(familyIds => {
                                 familyIds.forEach(familyId => {
-                                    fetch(`http://localhost:8000/lookup/family/info?familyId=${familyId}`)
+                                    fetch(`https://info442.chiptang.com/lookup/family/info?familyId=${familyId}`)
                                         .then(response => response.json())
                                         .then(familyInfo => {
                                             const familyElement = document.createElement('div');
@@ -203,14 +203,14 @@ function fetchChildrenForEvent() {
 
 function fetchActivitiesForEvent() {
     const eventId = document.getElementById('activity_event_selector').value;
-    fetch(`http://localhost:8000/lookup/event/activity?eventId=${eventId}`)
+    fetch(`https://info442.chiptang.com/lookup/event/activity?eventId=${eventId}`)
         .then(response => response.json())
         .then(activities => {
             const activitiesList = document.getElementById('activity_list');
             activitiesList.innerHTML = '';
 
             activities.forEach(activity => {
-                fetch(`http://localhost:8000/lookup/child/info?childId=${activity.child_id}`)
+                fetch(`https://info442.chiptang.com/lookup/child/info?childId=${activity.child_id}`)
                     .then(response => response.json())
                     .then(childInfo => {
                         const activityElement = document.createElement('div');
@@ -218,14 +218,14 @@ function fetchActivitiesForEvent() {
                         let checkInByInfo = '';
 
                         if (activity.staff_id) {
-                            fetch(`http://localhost:8000/lookup/staff/info?staffId=${activity.staff_id}`)
+                            fetch(`https://info442.chiptang.com/lookup/staff/info?staffId=${activity.staff_id}`)
                                 .then(response => response.json())
                                 .then(staffInfo => {
                                     checkInByInfo = `Check-in by Staff: ${staffInfo.name}`;
                                     updateActivityElement(activity, childInfo, activityElement, checkInByInfo);
                                 });
                         } else if (activity.family_id) {
-                            fetch(`http://localhost:8000/lookup/family/info?familyId=${activity.family_id}`)
+                            fetch(`https://info442.chiptang.com/lookup/family/info?familyId=${activity.family_id}`)
                                 .then(response => response.json())
                                 .then(familyInfo => {
                                     checkInByInfo = `Check-in by Family: ${familyInfo.guardian_name}`;
@@ -257,7 +257,7 @@ function addEvent(e) {
     const userId = getQueryParam('id');
     const name = document.getElementById('name').value;
 
-    fetch('http://localhost:8000/create/event', {
+    fetch('https://info442.chiptang.com/create/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: name, staffId: userId })
@@ -281,7 +281,7 @@ function addChild(e) {
     const eventId = document.getElementById('child_event_selector').value;
     const childId = document.getElementById('child_child_selector').value;
 
-    fetch('http://localhost:8000/addchild/event', {
+    fetch('https://info442.chiptang.com/addchild/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ eventId: eventId, childId: childId })
@@ -309,11 +309,11 @@ function updateChildOptionsForEvent(eventId) {
     const childSelector = document.getElementById('check_in_child_selector');
     childSelector.innerHTML = '<option value="">Select a Child</option>';
 
-    fetch(`http://localhost:8000/lookup/event/child?eventId=${eventId}`)
+    fetch(`https://info442.chiptang.com/lookup/event/child?eventId=${eventId}`)
         .then(response => response.json())
         .then(childIds => {
             childIds.forEach(childId => {
-                fetch(`http://localhost:8000/lookup/child/info?childId=${childId}`)
+                fetch(`https://info442.chiptang.com/lookup/child/info?childId=${childId}`)
                     .then(response => response.json())
                     .then(childInfo => {
                         const optionText = `${childId} - ${childInfo.child_name}`;
@@ -340,7 +340,7 @@ function checkInChild() {
     const timeOptions = { hour: 'numeric', minute: 'numeric', hour12: true };
     const time = now.toLocaleTimeString('en-US', timeOptions);
 
-    fetch('http://localhost:8000/checkin/bystaff', {
+    fetch('https://info442.chiptang.com/checkin/bystaff', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

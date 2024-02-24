@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', fetchStaffAndEvents);
 
 function fetchStaffAndEvents() {
-    fetch('http://localhost:8000/lookup/staff/info?staffId=all')
+    fetch('https://info442.chiptang.com/lookup/staff/info?staffId=all')
         .then(handleResponse)
         .then(staffList => populateStaffList(staffList))
         .catch(error => console.error('Error fetching staff list:', error));
@@ -24,7 +24,7 @@ function populateStaffList(staffList) {
         staffListDiv.appendChild(staffDiv);
 
         // Fetch events associated with this staff member
-        fetch(`http://localhost:8000/lookup/staff/event?staffId=${staff.staff_id}`)
+        fetch(`https://info442.chiptang.com/lookup/staff/event?staffId=${staff.staff_id}`)
             .then(handleResponse)
             .then(eventIds => fetchAndDisplayEvents(eventIds, staffDiv))
             .catch(error => console.error('Error fetching events for staff:', error));
@@ -34,7 +34,7 @@ function populateStaffList(staffList) {
 function fetchAndDisplayEvents(eventIds, staffDiv) {
     eventIds.forEach(eventId => {
         // Fetch detailed info for each event
-        fetch(`http://localhost:8000/lookup/event/info?eventId=${eventId}`)
+        fetch(`https://info442.chiptang.com/lookup/event/info?eventId=${eventId}`)
             .then(handleResponse)
             .then(eventInfos => {
                 eventInfos.forEach(eventInfo => {

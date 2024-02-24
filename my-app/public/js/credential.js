@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: formData.get('signUpType')
         };
 
-        const apiUrl = data.type === 'parent' ? 'http://localhost:8000/create/family' : 'http://localhost:8000/create/staff';
+        const apiUrl = data.type === 'parent' ? 'https://info442.chiptang.com/create/family' : 'https://info442.chiptang.com/create/staff';
 
         fetch(apiUrl, {
             method: 'POST',
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: formData.get('logInType')
         };
 
-        const apiUrl = data.type === 'parent' ? 'http://localhost:8000/login/family' : 'http://localhost:8000/login/staff';
+        const apiUrl = data.type === 'parent' ? 'https://info442.chiptang.com/login/family' : 'https://info442.chiptang.com/login/staff';
 
         fetch(apiUrl, {
             method: 'POST',
