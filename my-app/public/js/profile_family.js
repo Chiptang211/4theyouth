@@ -231,7 +231,7 @@ function updateEventOptionsForChild(childId) {
 function checkInChild() {
     const userId = getQueryParam('id');
     const childId = document.getElementById('check_in_child_selector').value;
-    const eventId = document.getElementById('event_id').value;
+    const eventId = document.getElementById('check_in_event_selector').value;
     const locationId = document.getElementById('location').value;
 
     const now = new Date();
