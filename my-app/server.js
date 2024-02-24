@@ -3,9 +3,11 @@
 const express = require('express');
 const sqlite3 = require('sqlite3');
 const sqlite = require('sqlite');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 
 /**
@@ -24,8 +26,8 @@ async function getDBConnection() {
 
 app.post('/create/family', async (req, res) => {
   try {
-      let { name, email, phone } = req.body;
-      if (!name || !email || !phone) {
+      let { name, email, phone, password } = req.body;
+      if (!name || !email || !phone || !password) {
           return res.status(400).send('Missing data');
       }
 
@@ -41,10 +43,10 @@ app.post('/create/family', async (req, res) => {
             return res.status(404).send('Phone already exists in the database');
         }
 
-      const result = await db.run(`INSERT INTO guardian (guardian_name, email, phone) VALUES (?, ?, ?)`, [name, email, phone]);
+      const result = await db.run(`INSERT INTO guardian (guardian_name, email, phone, password) VALUES (?, ?, ?, ?)`, [name, email, phone, password]);
 
       if (result && result.lastID) {
-          return res.status(201).json({ family_id: result.lastID });
+          return res.status(201).json({ familyId: result.lastID });
       } else {
           return res.status(500).send('Could not create the family entry');
       }
@@ -52,6 +54,30 @@ app.post('/create/family', async (req, res) => {
       console.error('Failed to create family', error);
       return res.status(500).send('Internal Server Error');
   }
+});
+
+app.post('/login/family', async (req, res) => {
+    const { credential, password } = req.body; // 'credential' can be either email or phone
+
+    if (!credential || !password) {
+        return res.status(400).send('Email/phone and password are required');
+    }
+
+    try {
+        const db = await getDBConnection();
+
+        const query = `SELECT * FROM guardian WHERE (email = ? OR phone = ?) AND password = ?`;
+        const guardian = await db.get(query, [credential, credential, password]);
+
+        if (guardian) {
+            res.status(200).json({ message: 'Login successful', familyId: guardian.family_id });
+        } else {
+            res.status(404).send('Login failed: Guardian not found or password incorrect');
+        }
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).send('Internal server error');
+    }
 });
 
 app.post('/addchild/family', async (req, res) => {
@@ -73,10 +99,10 @@ app.post('/addchild/family', async (req, res) => {
       if (childResult && childResult.lastID) {
           const childId = childResult.lastID;
 
-          const linkResult = await db.run(`INSERT INTO family_link (guardian_id, child_id) VALUES (?, ?)`, [familyId, childId]);
+          const linkResult = await db.run(`INSERT INTO family_link (family_id, child_id) VALUES (?, ?)`, [familyId, childId]);
 
           if (linkResult && linkResult.lastID) {
-              return res.status(201).json({ child_id: childId });
+              return res.status(201).json({ childId: childId });
           } else {
               return res.status(500).send('Could not link the child with the guardian');
           }
@@ -91,8 +117,8 @@ app.post('/addchild/family', async (req, res) => {
 
 app.post('/create/staff', async (req, res) => {
   try {
-      let { name, email, phone } = req.body;
-      if (!name || !email || !phone) {
+      let { name, email, phone, password } = req.body;
+      if (!name || !email || !phone || !password) {
           return res.status(400).send('Missing data');
       }
 
@@ -108,10 +134,10 @@ app.post('/create/staff', async (req, res) => {
           return res.status(404).send('Phone already exists in the database');
       }
 
-      const result = await db.run(`INSERT INTO staff (name, email, phone) VALUES (?, ?, ?)`, [name, email, phone]);
+      const result = await db.run(`INSERT INTO staff (name, email, phone, password) VALUES (?, ?, ?, ?)`, [name, email, phone, password]);
 
       if (result && result.lastID) {
-          return res.status(201).json({ staff_id: result.lastID });
+          return res.status(201).json({ staffId: result.lastID });
       } else {
           return res.status(500).send('Could not create the staff entry');
       }
@@ -119,6 +145,30 @@ app.post('/create/staff', async (req, res) => {
       console.error('Failed to create staff', error);
       return res.status(500).send('Internal Server Error');
   }
+});
+
+app.post('/login/staff', async (req, res) => {
+    const { credential, password } = req.body;
+
+    if (!credential || !password) {
+        return res.status(400).send('Email/phone and password are required');
+    }
+
+    try {
+        const db = await getDBConnection();
+
+        const query = `SELECT * FROM staff WHERE (email = ? OR phone = ?) AND password = ?`;
+        const staff = await db.get(query, [credential, credential, password]);
+
+        if (staff) {
+            res.status(200).json({ message: 'Login successful', staffId: staff.staff_id });
+        } else {
+            res.status(404).send('Login failed: Staff not found or password incorrect');
+        }
+    } catch (error) {
+        console.error('Database error:', error);
+        res.status(500).send('Internal server error');
+    }
 });
 
 app.post('/create/event', async (req, res) => {
@@ -143,7 +193,7 @@ app.post('/create/event', async (req, res) => {
       const result = await db.run(`INSERT INTO event (event_name, staff_id) VALUES (?, ?)`, [name, staffId]);
 
       if (result && result.lastID) {
-          return res.status(201).json({ event_id: result.lastID });
+          return res.status(201).json({ eventId: result.lastID });
       } else {
           return res.status(500).send('Could not create the event entry');
       }
@@ -280,11 +330,11 @@ app.get('/lookup/family/child', async (req, res) => {
         const children = await db.all(`
             SELECT child_id 
             FROM family_link 
-            WHERE guardian_id = ?`, [familyId]);
+            WHERE family_id = ?`, [familyId]);
 
         const childIds = children.map(child => child.child_id);
 
-        res.status(200).json(childIds );
+        res.status(200).json(childIds);
     } catch (error) {
         console.error('Failed to lookup family\'s children', error);
         res.status(500).send('Internal Server Error');
@@ -339,16 +389,49 @@ app.get('/lookup/child/info', async (req, res) => {
 
     try {
         const db = await getDBConnection();
-        const childInfo = await db.get(`SELECT child_name FROM child WHERE child_id = ?`, [childId]);
-        if (!childInfo) {
-            return res.status(404).send('Child not found');
+        if (childId === 'all') {
+            // If childId is 'all', query to get all child names and ids
+            const allChildrenInfo = await db.all(`SELECT child_id, child_name FROM child`);
+            if (!allChildrenInfo.length) {
+                return res.status(404).send('No children found');
+            }
+            return res.status(200).json(allChildrenInfo);
+        } else {
+            // Handle the case for a specific childId as before
+            const childInfo = await db.get(`SELECT child_name FROM child WHERE child_id = ?`, [childId]);
+            if (!childInfo) {
+                return res.status(404).send('Child not found');
+            }
+            return res.status(200).json(childInfo);
         }
-        res.status(200).json(childInfo);
     } catch (error) {
         console.error('Failed to lookup child info', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
+
+app.get('/lookup/child/family', async (req, res) => {
+    const { childId } = req.query;
+    if (!childId) {
+        return res.status(400).send('Missing or invalid childId');
+    }
+
+    try {
+        const db = await getDBConnection();
+        const family = await db.all(`
+            SELECT family_id
+            FROM family_link
+            WHERE child_id = ?`, [childId]);
+
+        const familyIds = family.map(family => family.family_id);
+        res.status(200).json(familyIds);
+    } catch (error) {
+        console.error('Failed to lookup children\'s family', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 
 app.get('/lookup/child/activity', async (req, res) => {
     const { childId } = req.query;
@@ -371,17 +454,24 @@ app.get('/lookup/child/activity', async (req, res) => {
 
 app.get('/lookup/staff/info', async (req, res) => {
     const { staffId } = req.query;
-    if (!staffId) {
-        return res.status(400).send('Missing or invalid staffId');
-    }
 
     try {
         const db = await getDBConnection();
-        const info = await db.get(`SELECT name, email, phone FROM staff WHERE staff_id = ?`, [staffId]);
-        if (!info) {
-            return res.status(404).send('Staff not found');
+        if (staffId === 'all') {
+            // Fetch and return info for all staff members
+            const allStaffInfo = await db.all(`SELECT staff_id, name, email, phone FROM staff`);
+            return res.status(200).json(allStaffInfo);
+        } else if (staffId) {
+            // Fetch and return info for a specific staff member
+            const info = await db.get(`SELECT name, email, phone FROM staff WHERE staff_id = ?`, [staffId]);
+            if (!info) {
+                return res.status(404).send('Staff not found');
+            }
+            res.status(200).json(info);
+        } else {
+            // No staffId or staffId not 'all'
+            return res.status(400).send('Missing or invalid staffId');
         }
-        res.status(200).json(info);
     } catch (error) {
         console.error('Failed to lookup staff info', error);
         res.status(500).send('Internal Server Error');
@@ -404,7 +494,7 @@ app.get('/lookup/staff/event', async (req, res) => {
     }
 });
 
-app.get('/lookup/event', async (req, res) => {
+app.get('/lookup/event/child', async (req, res) => {
     const { eventId } = req.query;
     if (!eventId) {
         return res.status(400).send('Missing or invalid eventId');
@@ -416,6 +506,42 @@ app.get('/lookup/event', async (req, res) => {
         res.status(200).json( children.map(child => child.child_id) );
     } catch (error) {
         console.error('Failed to lookup event\'s children', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.get('/lookup/event/info', async (req, res) => {
+    const { eventId } = req.query;
+    if (!eventId) {
+        return res.status(400).send('Missing or invalid eventId');
+    }
+
+    try {
+        const db = await getDBConnection();
+        const event = await db.all(`SELECT event_name, staff_id FROM event WHERE event_id = ?`, [eventId]);
+        res.status(200).json( event);
+    } catch (error) {
+        console.error('Failed to lookup event info', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.get('/lookup/event/activity', async (req, res) => {
+    const { eventId } = req.query;
+    if (!eventId) {
+        return res.status(400).send('Missing or invalid eventId');
+    }
+
+    try {
+        const db = await getDBConnection();
+        const activities = await db.all(`
+            SELECT child_id, date, time, location, staff_id, family_id 
+            FROM activity
+            WHERE event_id = ?`, [eventId]);
+        res.status(200).json(activities);
+    } catch (error) {
+        console.error('Failed to lookup event\'s activities', error);
         res.status(500).send('Internal Server Error');
     }
 });

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="author" content="Chip Tang">
+        <link rel="stylesheet" href="css/styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="img/4theYouth.png">
+        <title>4theYouth - Family Profile</title>
+    </head>
+    <body>
+        <header>
+            <nav class="menu">
+                <a href="index.html">Home</a></li>
+                <a href="contact.html">Contact</a></li>
+                <a href="credential.html">Profile</a></li>
+            </nav>
+        </header>
+
+        <section id="profile_box">
+            <div>
+                <h1>Family Profile</h1>
+                <h2><span id="user_name"></span></h2>
+                <p>Account ID: @<span id="user_id"></span></p>
+            </div>
+            <div>
+                <p>Phone: <span id="phone"></span></p>
+                <p>Email: <span id="email"></span></p>
+            </div>
+        </section>
+
+        <section id="menu_box">
+            <button id="children_view">Children</button>
+            <button id="event_view">Event</button>
+            <button id="activity_view">Activity</button>
+            <button id="check_in_view">Check In</button>
+        </section>
+
+        <section id="children_box" style="display:none;">
+            <h2>Children</h2>
+            <div>
+                <button id="add_child_button">Add Children</button>
+                <form id="add_child_form" style="display:none;">
+                    <h2>Add Child to Your Family</h2>
+                    <div>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <button type="add_child_submit">Add</button>
+                    <button id="hide_child_button">Cancel</button>
+                </form>
+            </div>
+            <div id="children_list">
+            </div>
+        </section>
+
+        <section id="event_box" style="display:none;">
+            <h2>Event</h2>
+            <div>
+                <label for="event_child_selector">Select Child:</label>
+                <select id="event_child_selector">
+
+                </select>
+            </div>
+            <div id="events_list">
+            </div>
+        </section>
+
+        <section id="activity_box" style="display:none;">
+            <h2>Activity</h2>
+            <div>
+                <label for="activity_child_selector">Select Child:</label>
+                <select id="activity_child_selector">
+                </select>
+            </div>
+            <div id="activity_list">
+            </div>
+        </section>
+
+        <section id="check_in_box" style="display:none;">
+            <h2>Check In</h2>
+            <div>
+                <label for="check_in_child_selector">Select Child:</label>
+                <select id="check_in_child_selector">
+                </select>
+            </div>
+            <div>
+                <label for="check_in_event_selector">Select Event:</label>
+                <select id="check_in_event_selector">
+                    <option>Select an Event</option>
+                </select>
+            </div>
+            <div>
+                <label for="location">Location ID:</label>
+                <input type="text" id="location" name="location" required>
+            </div>
+            <button id="check_in_button">Check In</button>
+        </section>
+
+        <footer>
+            <h1>2024 4theYouth All Rights Reserved.</h1>
+            <p>
+              Created by Eddie Baghdasaryan, Chip Tang, Hung Tran for INFO 442
+            </p>
+        </footer>
+
+        <script src="js/profile_family.js"></script>
+    </body>
+</html>
