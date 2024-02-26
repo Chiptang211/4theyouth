@@ -9,7 +9,7 @@ h1, h2, p {
   color: black;
 }
 
-header {
+/* header {
   background-color: #31afa8;
   color: #fff;
   display: flex;
@@ -19,7 +19,57 @@ header {
   border-bottom: 3px solid #f4f4f4;
   padding-left: 1em;
   padding-right: 1em;
-}
+} */
+
+  /* Horizontal Navbar */
+  .topnav {
+    background-color: #9BC675;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+  }
+  
+  .topnav a {
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  
+  .favicon {
+    width: 30px;
+    height: 30px;
+    margin-left: 10px;
+  }
+  
+  input[type="text"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    margin-right: 20px; 
+    width: 300px;
+  }
+  
+  .profile {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 50px;
+  }
+  
+  .profile a {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+  }
 
 nav a {
   color: #fff;
@@ -29,7 +79,7 @@ nav a {
 }
 
 button {
-  background-color: #31afa8;
+  background-color: #9BC675;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -51,7 +101,7 @@ input {
 }
 
 footer {
-  background-color: #31afa8;
+  background-color: #9BC675;
   color: #ffffff;
   padding: 0.5rem 0;
   text-align: center;
