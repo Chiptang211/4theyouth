@@ -1,5 +1,5 @@
 # API Documentation
-##Last Updated Feb 21
+##Last Updated Feb 26
 
 ## Host your server locally
 cd to this folder
@@ -7,10 +7,10 @@ cd to this folder
 `npm init -y`
 leave everything at sefault
 
-`npm install express sqlite3 sqlite`
+`npm install express sqlite3 sqlite cors`
 install additional libraries
 
-`node app.js`
+`node server.js`
 run server
 
 base url local: "http://localhost:8000" + request
