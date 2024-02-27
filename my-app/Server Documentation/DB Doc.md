@@ -28,7 +28,7 @@ CREATE TABLE "event" (
 	"event_name"	TEXT NOT NULL UNIQUE,
 	"staff_id"	INTEGER NOT NULL,
 	"event_description"	TEXT NOT NULL,
-	"event_date"	INTEGER NOT NULL,
+	"event_date"	TEXT NOT NULL,
 	FOREIGN KEY("staff_id") REFERENCES "staff"("staff_id"),
 	PRIMARY KEY("event_id" AUTOINCREMENT)
 );
