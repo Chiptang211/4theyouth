@@ -12,15 +12,14 @@
         <header>
             <div class="topnav">
                 <a href="index.html"><img src="img/4theYouth.png" alt="Favicon" class="favicon"></a>
-                <input type="text" placeholder="Search">
                 <a href="index.html">Home</a>
                 <a href="#">Forms</a>
                 <a href="contact.html">Messages</a>
                 <a href="#">Settings</a>
                 <div class="profile">
-                    <img src="img/headshot.avif" alt="headshot" class="profile-icon">
+                    <p><span id="user_name_nav"></span></p>
                 </div>
-                <a href="profile_family.html">FirstName LastName</a>
+                <a href="credential.html">Log Out</a>
             </div>
         </header>
 
@@ -52,6 +51,12 @@
                     <div>
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" required>
+                        <br>
+                        <label for="description">Description:</label>
+                        <input type="text" id="description" name="description" required>
+                        <br>
+                        <label for="date">Date:</label>
+                        <input type="date" id="date" name="date" required/>
                     </div>
                     <button type="create_event_submit">Add</button>
                     <button id="hide_event_button">Cancel</button>
@@ -108,7 +113,7 @@
                 </select>
             </div>
             <div>
-                <label for="location">Location ID:</label>
+                <label for="location">Location:</label>
                 <input type="text" id="location" name="location" required>
             </div>
             <!--use /checkin/bystaff to check in kids-->

@@ -72,6 +72,7 @@ function fetchStaffInfo(userId) {
         .then(response => response.json())
         .then(data => {
             document.getElementById('user_name').textContent = data.name;
+            document.getElementById('user_name_nav').textContent = data.name;
             document.getElementById('user_id').textContent = userId;
             document.getElementById('phone').textContent = data.phone;
             document.getElementById('email').textContent = data.email;
@@ -97,8 +98,12 @@ function fetchEventList(userId) {
                     .then(eventInfos => {
                         eventInfos.forEach(eventInfo => {
                             const eventElement = document.createElement('div');
-                            eventElement.textContent = eventInfo.event_name;
                             eventElement.className = 'info-div';
+                            eventElement.innerHTML = `
+                            <strong>Event Name:</strong> ${eventInfo.event_name} (ID ${eventId})<br>
+                            <strong>Event Date:</strong> ${eventInfo.event_date}<br>
+                            <strong>Event Description:</strong> ${eventInfo.event_description}<br>
+                            `;
                             eventListDiv.appendChild(eventElement);
                         });
                     })
@@ -182,11 +187,11 @@ function fetchChildrenForEvent() {
                                             const familyElement = document.createElement('div');
                                             familyElement.className = 'info-div';
                                             familyElement.innerHTML = `
-                                                <strong>Child Name:</strong> ${childInfo.child_name}<br>
-                                                <strong>Child Id:</strong> ${childId}<br> <!-- Correctly displaying child_id -->
+                                                <strong>Child Name:</strong> ${childInfo.child_name} (ID ${childId})<br>
                                                 <strong>Guardian Name:</strong> ${familyInfo.guardian_name}<br>
                                                 <strong>Email:</strong> ${familyInfo.email}<br>
                                                 <strong>Phone:</strong> ${familyInfo.phone}<br>
+                                                <strong>Remarks:</strong> ${childInfo.child_remarks}<br>
                                             `;
                                             childrenList.appendChild(familyElement);
                                         })
@@ -256,11 +261,13 @@ function addEvent(e) {
     e.preventDefault();
     const userId = getQueryParam('id');
     const name = document.getElementById('name').value;
+    const date = document.getElementById('date').value;
+    const description = document.getElementById('description').value;
 
     fetch('https://info442.chiptang.com/create/event', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, staffId: userId })
+        body: JSON.stringify({ name: name, staffId: userId, date: date, description: description })
     })
     .then(response => response.ok ? response.json() : Promise.reject('Failed to create event'))
     .then(() => {

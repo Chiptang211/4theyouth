@@ -160,7 +160,7 @@ JSON
   "name": "Summer Camp",
   "staffId": 1,
   "description": "Summer Camp Description",
-  "date": 20240701
+  "date": "2024-02-28"
 }
 
 **Example Response:**
@@ -494,13 +494,13 @@ GET /lookup/event/info?eventId=3
     "event_name": "event1",
     "staff_id": 1,
     "event_description": "Place holder",
-    "event_date": 20240227
+    "event_date": "2024-02-28"
   }
   {
     "event_name": "event2",
     "staff_id": 1,
     "event_description": "Place holder",
-    "event_date": 20240227
+    "event_date": "2024-02-28"
   }
 ]
 
@@ -512,7 +512,7 @@ JSON
     "event_name": "event1",
     "staff_id": 1,
     "event_description": "Place holder",
-    "event_date": 20240227
+    "event_date": "2024-02-28"
   }
 ]
 

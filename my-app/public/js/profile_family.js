@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('hide_child_button').addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent default action
+        e.preventDefault();
         document.getElementById('add_child_form').style.display = 'none';
     });
 
@@ -44,6 +44,7 @@ function fetchFamilyInfo(userId) {
         .then(response => response.json())
         .then(data => {
             document.getElementById('user_name').textContent = data.guardian_name;
+            document.getElementById('user_name_nav').textContent = data.guardian_name;
             document.getElementById('user_id').textContent = userId;
             document.getElementById('phone').textContent = data.phone;
             document.getElementById('email').textContent = data.email;
@@ -68,8 +69,11 @@ function fetchChildrenList(userId) {
                     .then(response => response.json())
                     .then(childInfo => {
                         const childElement = document.createElement('div');
-                        childElement.textContent = childInfo.child_name;
                         childElement.className = 'info-div';
+                        childElement.innerHTML = `
+                        <strong>Child Name:</strong> ${childInfo.child_name} (ID ${childId})<br>
+                        <strong>Child Remarks:</strong> ${childInfo.child_remarks}<br>
+                        `;
                         childrenListDiv.appendChild(childElement);
                     });
             });
@@ -118,7 +122,10 @@ function fetchEventsForChild() {
                                     const eventElement = document.createElement('div');
                                     eventElement.className = 'info-div';
                                     eventElement.innerHTML = `
-                                        <strong>Event Name:</strong> ${info.event_name}<br>
+                                        <strong>Event Name:</strong> ${info.event_name} (ID ${event.event_id})<br>
+                                        <strong>Event Date:</strong> ${info.event_date}<br>
+                                        <strong>Event Description:</strong> ${info.event_description}<br>
+                                        <br>
                                         <strong>Staff Name:</strong> ${staffInfo.name}<br>
                                         <strong>Staff Email:</strong> ${staffInfo.email}<br>
                                         <strong>Staff Phone:</strong> ${staffInfo.phone}<br>
@@ -186,11 +193,12 @@ function addChild(e) {
     e.preventDefault();
     const userId = getQueryParam('id');
     const name = document.getElementById('name').value;
+    const remarks = document.getElementById('remarks').value;
 
     fetch('https://info442.chiptang.com/addchild/family', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ childName: name, familyId: userId })
+        body: JSON.stringify({ childName: name, familyId: userId, remarks: remarks})
     })
     .then(response => response.ok ? response.json() : Promise.reject('Failed to add child'))
     .then(() => {
