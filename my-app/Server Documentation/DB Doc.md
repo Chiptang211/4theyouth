@@ -19,7 +19,7 @@ CREATE TABLE "activity" (
 CREATE TABLE "child" (
 	"child_id"	INTEGER NOT NULL UNIQUE,
 	"child_name"	INTEGER NOT NULL,
-	"remarks"	TEXT,
+	"child_remarks"	TEXT NOT NULL,
 	PRIMARY KEY("child_id" AUTOINCREMENT)
 );
 
@@ -27,8 +27,10 @@ CREATE TABLE "event" (
 	"event_id"	INTEGER NOT NULL UNIQUE,
 	"event_name"	TEXT NOT NULL UNIQUE,
 	"staff_id"	INTEGER NOT NULL,
-	PRIMARY KEY("event_id" AUTOINCREMENT),
-	FOREIGN KEY("staff_id") REFERENCES "staff"("staff_id")
+	"event_description"	TEXT NOT NULL,
+	"event_date"	INTEGER NOT NULL,
+	FOREIGN KEY("staff_id") REFERENCES "staff"("staff_id"),
+	PRIMARY KEY("event_id" AUTOINCREMENT)
 );
 
 CREATE TABLE "event_link" (

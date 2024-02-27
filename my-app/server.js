@@ -82,8 +82,8 @@ app.post('/login/family', async (req, res) => {
 
 app.post('/addchild/family', async (req, res) => {
   try {
-      let { childName, familyId } = req.body;
-      if (!childName || !familyId) {
+      let { childName, familyId, remarks } = req.body;
+      if (!childName || !familyId || !remarks) {
           return res.status(404).send('Missing data');
       }
 
@@ -94,7 +94,7 @@ app.post('/addchild/family', async (req, res) => {
           return res.status(404).send('Family ID does not exist');
       }
 
-      const childResult = await db.run(`INSERT INTO child (child_name) VALUES (?)`, [childName]);
+      const childResult = await db.run(`INSERT INTO child (child_name, child_remarks) VALUES (?, ?)`, [childName, remarks]);
 
       if (childResult && childResult.lastID) {
           const childId = childResult.lastID;
@@ -173,8 +173,8 @@ app.post('/login/staff', async (req, res) => {
 
 app.post('/create/event', async (req, res) => {
   try {
-      let { name, staffId } = req.body;
-      if (!name || !staffId ) {
+      let { name, staffId, description, date} = req.body;
+      if (!name || !staffId || !description || !date ) {
           return res.status(400).send('Missing data');
       }
 
@@ -190,7 +190,7 @@ app.post('/create/event', async (req, res) => {
           return res.status(404).send('Staff ID does not exist');
       }
 
-      const result = await db.run(`INSERT INTO event (event_name, staff_id) VALUES (?, ?)`, [name, staffId]);
+      const result = await db.run(`INSERT INTO event (event_name, staff_id, event_description, event_date) VALUES (?, ?, ?, ?)`, [name, staffId, description, date]);
 
       if (result && result.lastID) {
           return res.status(201).json({ eventId: result.lastID });
@@ -391,14 +391,14 @@ app.get('/lookup/child/info', async (req, res) => {
         const db = await getDBConnection();
         if (childId === 'all') {
             // If childId is 'all', query to get all child names and ids
-            const allChildrenInfo = await db.all(`SELECT child_id, child_name FROM child`);
+            const allChildrenInfo = await db.all(`SELECT child_id, child_name, child_remarks FROM child`);
             if (!allChildrenInfo.length) {
                 return res.status(404).send('No children found');
             }
             return res.status(200).json(allChildrenInfo);
         } else {
             // Handle the case for a specific childId as before
-            const childInfo = await db.get(`SELECT child_name FROM child WHERE child_id = ?`, [childId]);
+            const childInfo = await db.get(`SELECT child_name, child_remarks FROM child WHERE child_id = ?`, [childId]);
             if (!childInfo) {
                 return res.status(404).send('Child not found');
             }
@@ -517,15 +517,24 @@ app.get('/lookup/event/info', async (req, res) => {
         return res.status(400).send('Missing or invalid eventId');
     }
 
+    const db = await getDBConnection();
     try {
-        const db = await getDBConnection();
-        const event = await db.all(`SELECT event_name, staff_id FROM event WHERE event_id = ?`, [eventId]);
-        res.status(200).json( event);
+        if (eventId === 'all') {
+            const allEventInfo = await db.all(`SELECT event_name, staff_id, event_description, event_date FROM event`);
+            return res.status(200).json(allEventInfo);
+        } else {
+            const info = await db.all(`SELECT event_name, staff_id, event_description, event_date FROM event WHERE event_id = ?`, [eventId]);
+            if (info.length === 0) {
+                return res.status(404).send('Event not found');
+            }
+            res.status(200).json(info);
+        }
     } catch (error) {
         console.error('Failed to lookup event info', error);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 app.get('/lookup/event/activity', async (req, res) => {
     const { eventId } = req.query;

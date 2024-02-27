@@ -84,7 +84,8 @@ Returns 500 for internal server errors.
 JSON
 {
   "childName": "Jane Doe",
-  "familyId": 1
+  "familyId": 1,
+  "remarks": "Jane is allergic to cats"
 }
 
 **Example Response:**
@@ -157,7 +158,9 @@ Returns 500 for internal server errors.
 JSON
 {
   "name": "Summer Camp",
-  "staffId": 1
+  "staffId": 1,
+  "description": "Summer Camp Description",
+  "date": 20240701
 }
 
 **Example Response:**
@@ -476,16 +479,40 @@ Returns 500 Internal Server Error for any server-side issues.
 **Request URL:** /lookup/event/info
 **Request Format:** Query Parameters
 **Request Type:** GET
-**Description:** Retrieves a list of event info, based on a provided event ID.
+**Description:** Retrieves a list of event info, or a single event info based on a provided event ID.
 **Example Request:**
+***All Events***
+GET /lookup/event/info?eventId=all
+
+***Single Event***
 GET /lookup/event/info?eventId=3
 
 **Example Response:**
+***all Event***
+[
+  {
+    "event_name": "event1",
+    "staff_id": 1,
+    "event_description": "Place holder",
+    "event_date": 20240227
+  }
+  {
+    "event_name": "event2",
+    "staff_id": 1,
+    "event_description": "Place holder",
+    "event_date": 20240227
+  }
+]
+
+
+***Single Event***
 JSON
 [
   {
     "event_name": "event1",
-    "staff_id": 1
+    "staff_id": 1,
+    "event_description": "Place holder",
+    "event_date": 20240227
   }
 ]
 
