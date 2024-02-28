@@ -1,4 +1,6 @@
-// Agenda
+'use strict';
+
+/ Agenda
 // Eddie, does this look right? I recovered it from GitHub history
 document.addEventListener('DOMContentLoaded', function() {
   fetchEvents();
@@ -120,10 +122,10 @@ async function fetchStaffInfo() {
         throw new Error('Failed to fetch staff info');
       }
       const staffInfo = await response.json();
-      
+
       const staffContactContainer = document.getElementById('staff-contact-container');
-      staffContactContainer.innerHTML = ''; // Clear existing content
-  
+      staffContactContainer.innerHTML = '';
+
       staffInfo.forEach(staff => {
         const staffProfileElement = document.createElement('div');
         staffProfileElement.className = 'staff-profile';
