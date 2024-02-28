@@ -16,8 +16,7 @@ function populateStaffList(staffList) {
         staffDiv.className = 'staff-info';
         staffDiv.className = 'info-div';
         staffDiv.innerHTML = `
-            <strong>ID:</strong> ${staff.staff_id}<br>
-            <strong>Name:</strong> ${staff.name}<br>
+            <strong>${staff.name} </strong> (ID ${staff.staff_id})<br>
             <strong>Email:</strong> <a href="mailto:${staff.email}">${staff.email}</a><br>
             <strong>Phone:</strong> ${staff.phone}<br>
         `;
@@ -42,7 +41,7 @@ function fetchAndDisplayEvents(eventIds, staffDiv) {
                     eventDiv.className = 'event-info';
                     eventDiv.className = 'info-div';
                     eventDiv.innerHTML = `
-                        <strong>Event Name:</strong> ${eventInfo.event_name} (ID: ${eventId})<br>
+                        ${eventInfo.event_name} (ID: ${eventId})<br>
                     `;
                     staffDiv.appendChild(eventDiv);
                 });

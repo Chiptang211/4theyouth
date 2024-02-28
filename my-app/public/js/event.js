@@ -7,7 +7,8 @@ function fetchEvents() {
         .then(response => response.json())
         .then(events => {
             const eventsByDate = groupEventsByDate(events);
-            Object.keys(eventsByDate).forEach(date => {
+            const sortedDates = Object.keys(eventsByDate).sort((a, b) => b.localeCompare(a));
+            sortedDates.forEach(date => {
                 eventsByDate[date].forEach(event => {
                     fetchStaffInfo(event.staff_id)
                         .then(staffInfo => {
@@ -18,6 +19,7 @@ function fetchEvents() {
         })
         .catch(error => console.error('Error fetching events:', error));
 }
+
 
 function groupEventsByDate(events) {
     return events.reduce((acc, event) => {
@@ -47,13 +49,28 @@ function displayEvent(event, staffInfo, date) {
     let dateSection = document.querySelector(`#date-${date}`);
     if (!dateSection) {
         dateSection = document.createElement('div');
+        dateSection.className = 'info-div';
         dateSection.id = `date-${date}`;
         dateSection.innerHTML = `<h2>${date}</h2>`;
-        eventList.appendChild(dateSection);
+
+        // Insert the new date section in the correct position
+        const existingDates = [...eventList.querySelectorAll('.info-div')]
+            .map(div => div.id.replace('date-', ''));
+        const sortedDates = [date, ...existingDates].sort((a, b) => b.localeCompare(a));
+        const insertIndex = sortedDates.indexOf(date);
+
+        if (insertIndex === 0 || eventList.children.length === 0) {
+            eventList.prepend(dateSection);
+        } else if (insertIndex === sortedDates.length - 1) {
+            eventList.appendChild(dateSection);
+        } else {
+            const nextDateSection = document.querySelector(`#date-${sortedDates[insertIndex + 1]}`);
+            eventList.insertBefore(dateSection, nextDateSection);
+        }
     }
 
     const eventElement = document.createElement('div');
-    eventElement.className = 'event';
+    eventElement.className = 'event info-div';
     eventElement.innerHTML = `
         <h3>${event.event_name}</h3>
         <p>${event.event_description}</p>
@@ -61,3 +78,4 @@ function displayEvent(event, staffInfo, date) {
     `;
     dateSection.appendChild(eventElement);
 }
+
