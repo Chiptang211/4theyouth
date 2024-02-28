@@ -520,7 +520,7 @@ app.get('/lookup/event/info', async (req, res) => {
     const db = await getDBConnection();
     try {
         if (eventId === 'all') {
-            const allEventInfo = await db.all(`SELECT event_name, staff_id, event_description, event_date FROM event`);
+            const allEventInfo = await db.all(`SELECT event_id, event_name, staff_id, event_description, event_date FROM event ORDER BY event_date DESC`);
             return res.status(200).json(allEventInfo);
         } else {
             const info = await db.all(`SELECT event_name, staff_id, event_description, event_date FROM event WHERE event_id = ?`, [eventId]);
