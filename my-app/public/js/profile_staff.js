@@ -265,17 +265,22 @@ function fetchBulletin(userId) {
     fetch(`https://info442.chiptang.com/lookup/bulletin?staffId=${userId}`)
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            if (response.status === 404) {
+                const bulletinList = document.getElementById('bulletin_list');
+                bulletinList.innerHTML = '';
+                bulletinList.innerHTML = '<div class="info-div">No bulletins available.</div>';
+                return [];
+            } else {
+                throw new Error('Network response was not ok');
+            }
         }
         return response.json();
     })
     .then(bulletinInfos => {
         const bulletinList = document.getElementById('bulletin_list');
-        // Ensure the list is empty before adding new bulletins
         bulletinList.innerHTML = ''; 
 
         bulletinInfos.forEach(bulletinInfo => {
-            // Create a new div for each bulletin message
             const bulletinElement = document.createElement('div');
             bulletinElement.className = 'info-div';
             bulletinElement.innerHTML = `${bulletinInfo.message} (ID ${bulletinInfo.bulletin_id})`;
