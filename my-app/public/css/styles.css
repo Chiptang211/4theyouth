@@ -120,8 +120,11 @@ footer {
 /* Staff card css */
 .staffcontact {
   display: flex;
+  justify-content:space-between;
+  flex-wrap:nowrap;
   overflow-x: auto;
   padding: 20px;
+
 }
 
 .staff-profile {
@@ -163,8 +166,11 @@ footer {
 
 .agenda-container {
   display: flex;
+  justify-content:space-between;
+  flex-wrap:nowrap;
   overflow-x: auto;
   padding: 20px;
+
 }
 
 .daily-agenda {
