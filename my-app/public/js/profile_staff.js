@@ -4,11 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const userId = getQueryParam('id');
     fetchStaffInfo(userId);
     fetchEventAndPopulateSelectors(userId);
+    fetchBulletin(userId);
 
     document.getElementById('event_view').addEventListener('click', () => toggleView('event_box'));
     document.getElementById('children_view').addEventListener('click', () => toggleView('children_box'));
     document.getElementById('activity_view').addEventListener('click', () => toggleView('activity_box'));
     document.getElementById('check_in_view').addEventListener('click', () => toggleView('check_in_box'));
+    document.getElementById('bulletin_view').addEventListener('click', () => toggleView('bulletin_box'));
 
     document.getElementById('event_view').addEventListener('click', () => {
         toggleView('event_box');
@@ -60,6 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('check_in_button').addEventListener('click', checkInChild);
+
+    //post bulletin
+    document.getElementById('bulletin_button').addEventListener('click', addBulletin);
 });
 
 function getQueryParam(param) {
@@ -81,7 +86,7 @@ function fetchStaffInfo(userId) {
 }
 
 function toggleView(activeViewId) {
-    ['children_box', 'event_box', 'activity_box', 'check_in_box'].forEach(section => {
+    ['children_box', 'event_box', 'activity_box', 'check_in_box', 'bulletin_box'].forEach(section => {
         document.getElementById(section).style.display = section === activeViewId ? 'block' : 'none';
     });
 }
@@ -256,6 +261,30 @@ function updateActivityElement(activity, childInfo, element, checkInByInfo) {
     document.getElementById('activity_list').appendChild(element);
 }
 
+function fetchBulletin(userId) {
+    fetch(`https://info442.chiptang.com/lookup/bulletin?staffId=${userId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(bulletinInfos => {
+        const bulletinList = document.getElementById('bulletin_list');
+        // Ensure the list is empty before adding new bulletins
+        bulletinList.innerHTML = ''; 
+
+        bulletinInfos.forEach(bulletinInfo => {
+            // Create a new div for each bulletin message
+            const bulletinElement = document.createElement('div');
+            bulletinElement.className = 'info-div';
+            bulletinElement.innerHTML = `${bulletinInfo.message} (ID ${bulletinInfo.bulletin_id})`;
+            bulletinList.appendChild(bulletinElement);
+        });
+    })
+    .catch(error => console.error('Error fetching bulletin info:', error));
+}
+
 
 function addEvent(e) {
     e.preventDefault();
@@ -375,3 +404,29 @@ function checkInChild() {
     });
 }
 
+function addBulletin(e) {
+    e.preventDefault();
+    const userId = getQueryParam('id');
+    const message = document.getElementById('message').value;
+
+    fetch('https://info442.chiptang.com/create/bulletin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ staffId: userId, message: message })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add bulletin');
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert(data);
+        document.getElementById('message').value = '';
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error adding bulletin:', error);
+        alert('Error adding bulletin: ' + error);
+    });
+}
