@@ -7,7 +7,8 @@ function fetchEvents() {
         .then(response => response.json())
         .then(events => {
             const eventsByDate = groupEventsByDate(events);
-            Object.keys(eventsByDate).forEach(date => {
+            const sortedDates = Object.keys(eventsByDate).sort((a, b) => b.localeCompare(a));
+            sortedDates.forEach(date => {
                 eventsByDate[date].forEach(event => {
                     fetchStaffInfo(event.staff_id)
                         .then(staffInfo => {
@@ -18,6 +19,7 @@ function fetchEvents() {
         })
         .catch(error => console.error('Error fetching events:', error));
 }
+
 
 function groupEventsByDate(events) {
     return events.reduce((acc, event) => {
@@ -31,9 +33,11 @@ function fetchStaffInfo(staffId) {
         .then(response => response.json())
         .then(data => {
             return {
+                id: staffId,
                 name: data.name,
                 email: data.email,
-                phone: data.phone
+                phone: data.phone,
+                role: data.role
             };
         })
         .catch(error => {
@@ -47,17 +51,35 @@ function displayEvent(event, staffInfo, date) {
     let dateSection = document.querySelector(`#date-${date}`);
     if (!dateSection) {
         dateSection = document.createElement('div');
+        dateSection.className = 'info-div';
         dateSection.id = `date-${date}`;
         dateSection.innerHTML = `<h2>${date}</h2>`;
-        eventList.appendChild(dateSection);
+
+        // Insert the new date section in the correct position
+        const existingDates = [...eventList.querySelectorAll('.info-div')]
+            .map(div => div.id.replace('date-', ''));
+        const sortedDates = [date, ...existingDates].sort((a, b) => b.localeCompare(a));
+        const insertIndex = sortedDates.indexOf(date);
+
+        if (insertIndex === 0 || eventList.children.length === 0) {
+            eventList.prepend(dateSection);
+        } else if (insertIndex === sortedDates.length - 1) {
+            eventList.appendChild(dateSection);
+        } else {
+            const nextDateSection = document.querySelector(`#date-${sortedDates[insertIndex + 1]}`);
+            eventList.insertBefore(dateSection, nextDateSection);
+        }
     }
 
     const eventElement = document.createElement('div');
-    eventElement.className = 'event';
+    eventElement.className = 'event info-div';
     eventElement.innerHTML = `
-        <h3>${event.event_name}</h3>
-        <p>${event.event_description}</p>
-        <p><strong>Staff:</strong> ${staffInfo.name}, <a href="mailto:${staffInfo.email}">${staffInfo.email}</a>, <a href="tel:${staffInfo.phone}">${staffInfo.phone}</a></p>
+        <strong>${event.event_name}</strong> (ID ${event.event_id})<br>
+        ${event.event_description}<br>
+        <br>
+        ${staffInfo.role}, ${staffInfo.name} (ID ${staffInfo.id})<br>
+        <a href="mailto:${staffInfo.email}">${staffInfo.email}</a>, <a href="tel:${staffInfo.phone}">${staffInfo.phone}</a>
     `;
     dateSection.appendChild(eventElement);
 }
+

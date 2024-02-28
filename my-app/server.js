@@ -117,8 +117,8 @@ app.post('/addchild/family', async (req, res) => {
 
 app.post('/create/staff', async (req, res) => {
   try {
-      let { name, email, phone, password } = req.body;
-      if (!name || !email || !phone || !password) {
+      let { name, email, phone, password, role } = req.body;
+      if (!name || !email || !phone || !password || !role) {
           return res.status(400).send('Missing data');
       }
 
@@ -134,7 +134,7 @@ app.post('/create/staff', async (req, res) => {
           return res.status(404).send('Phone already exists in the database');
       }
 
-      const result = await db.run(`INSERT INTO staff (name, email, phone, password) VALUES (?, ?, ?, ?)`, [name, email, phone, password]);
+      const result = await db.run(`INSERT INTO staff (name, email, phone, password, role) VALUES (?, ?, ?, ?, ?)`, [name, email, phone, password, role]);
 
       if (result && result.lastID) {
           return res.status(201).json({ staffId: result.lastID });
@@ -314,10 +314,39 @@ app.post('/checkin/bystaff', async (req, res) => {
           return res.status(500).send('Could not check in the child to the event');
       }
   } catch (error) {
-      console.error('Failed to check in child by parent', error);
+      console.error('Failed to check in child by staff', error);
       return res.status(500).send('Internal Server Error');
   }
 });
+
+app.post('/create/bulletin', async (req, res) => {
+    try {
+        let { staffId, message } = req.body;
+        if (!staffId || !message ) {
+            return res.status(400).send('Missing required data');
+        }
+
+        const db = await getDBConnection();
+
+        const staffExists = await db.get(`SELECT 1 FROM staff WHERE staff_id = ?`, [staffId]);
+        if (!staffExists) {
+            return res.status(404).send('staff ID does not exist');
+        }
+
+        const result = await db.run(`
+            INSERT INTO bulletin (staff_id, message)
+            VALUES (?, ?)`, [staffId, message]);
+
+        if (result && result.lastID) {
+            return res.status(201).send('Bulletin message successfully posted.');
+        } else {
+            return res.status(500).send('Could not create Bulletin message.');
+        }
+    } catch (error) {
+        console.error('Failed to create bulletin message', error);
+        return res.status(500).send('Internal Server Error');
+    }
+  });
 
 app.get('/lookup/family/child', async (req, res) => {
     const { familyId } = req.query;
@@ -459,11 +488,11 @@ app.get('/lookup/staff/info', async (req, res) => {
         const db = await getDBConnection();
         if (staffId === 'all') {
             // Fetch and return info for all staff members
-            const allStaffInfo = await db.all(`SELECT staff_id, name, email, phone FROM staff`);
+            const allStaffInfo = await db.all(`SELECT staff_id, name, email, phone, role FROM staff`);
             return res.status(200).json(allStaffInfo);
         } else if (staffId) {
             // Fetch and return info for a specific staff member
-            const info = await db.get(`SELECT name, email, phone FROM staff WHERE staff_id = ?`, [staffId]);
+            const info = await db.get(`SELECT name, email, phone, role FROM staff WHERE staff_id = ?`, [staffId]);
             if (!info) {
                 return res.status(404).send('Staff not found');
             }
@@ -551,6 +580,31 @@ app.get('/lookup/event/activity', async (req, res) => {
         res.status(200).json(activities);
     } catch (error) {
         console.error('Failed to lookup event\'s activities', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.get('/lookup/bulletin', async (req, res) => {
+    const { staffId } = req.query;
+    if (!staffId) {
+        return res.status(400).send('Missing or invalid staffId');
+    }
+
+    const db = await getDBConnection();
+    try {
+        if (staffId === 'all') {
+            const allInfo = await db.all(`SELECT bulletin_id, staff_id, message FROM bulletin ORDER BY bulletin_id DESC`);
+            return res.status(200).json(allInfo);
+        } else {
+            const info = await db.all(`SELECT bulletin_id, staff_id, message FROM bulletin WHERE staff_id = ? ORDER BY bulletin_id DESC `, [staffId]);
+            if (info.length === 0) {
+                return res.status(404).send('Bulletin not found');
+            }
+            res.status(200).json(info);
+        }
+    } catch (error) {
+        console.error('Failed to lookup bulletin', error);
         res.status(500).send('Internal Server Error');
     }
 });

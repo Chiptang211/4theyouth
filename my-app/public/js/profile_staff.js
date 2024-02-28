@@ -4,11 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const userId = getQueryParam('id');
     fetchStaffInfo(userId);
     fetchEventAndPopulateSelectors(userId);
+    fetchBulletin(userId);
 
     document.getElementById('event_view').addEventListener('click', () => toggleView('event_box'));
     document.getElementById('children_view').addEventListener('click', () => toggleView('children_box'));
     document.getElementById('activity_view').addEventListener('click', () => toggleView('activity_box'));
     document.getElementById('check_in_view').addEventListener('click', () => toggleView('check_in_box'));
+    document.getElementById('bulletin_view').addEventListener('click', () => toggleView('bulletin_box'));
 
     document.getElementById('event_view').addEventListener('click', () => {
         toggleView('event_box');
@@ -60,6 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.getElementById('check_in_button').addEventListener('click', checkInChild);
+
+    //post bulletin
+    document.getElementById('bulletin_button').addEventListener('click', addBulletin);
 });
 
 function getQueryParam(param) {
@@ -76,12 +81,13 @@ function fetchStaffInfo(userId) {
             document.getElementById('user_id').textContent = userId;
             document.getElementById('phone').textContent = data.phone;
             document.getElementById('email').textContent = data.email;
+            document.getElementById('role').textContent = data.role;
         })
         .catch(error => console.error('Error fetching staff info:', error));
 }
 
 function toggleView(activeViewId) {
-    ['children_box', 'event_box', 'activity_box', 'check_in_box'].forEach(section => {
+    ['children_box', 'event_box', 'activity_box', 'check_in_box', 'bulletin_box'].forEach(section => {
         document.getElementById(section).style.display = section === activeViewId ? 'block' : 'none';
     });
 }
@@ -100,9 +106,9 @@ function fetchEventList(userId) {
                             const eventElement = document.createElement('div');
                             eventElement.className = 'info-div';
                             eventElement.innerHTML = `
-                            <strong>Event Name:</strong> ${eventInfo.event_name} (ID ${eventId})<br>
-                            <strong>Event Date:</strong> ${eventInfo.event_date}<br>
-                            <strong>Event Description:</strong> ${eventInfo.event_description}<br>
+                            <strong>${eventInfo.event_name}</strong> (ID ${eventId})<br>
+                            ${eventInfo.event_date}<br>
+                            ${eventInfo.event_description}<br>
                             `;
                             eventListDiv.appendChild(eventElement);
                         });
@@ -187,11 +193,12 @@ function fetchChildrenForEvent() {
                                             const familyElement = document.createElement('div');
                                             familyElement.className = 'info-div';
                                             familyElement.innerHTML = `
-                                                <strong>Child Name:</strong> ${childInfo.child_name} (ID ${childId})<br>
-                                                <strong>Guardian Name:</strong> ${familyInfo.guardian_name}<br>
-                                                <strong>Email:</strong> ${familyInfo.email}<br>
-                                                <strong>Phone:</strong> ${familyInfo.phone}<br>
-                                                <strong>Remarks:</strong> ${childInfo.child_remarks}<br>
+                                                <strong>${childInfo.child_name}</strong> (ID ${childId})<br>
+                                                ${childInfo.child_remarks}<br>
+                                                <br>
+                                                Contact: ${familyInfo.guardian_name} (ID ${familyId})<br>
+                                                <a href="mailto:${familyInfo.email}">${familyInfo.email}</a>
+                                                <a href="tel:${familyInfo.phone}">${familyInfo.phone}</a><br>
                                             `;
                                             childrenList.appendChild(familyElement);
                                         })
@@ -226,14 +233,14 @@ function fetchActivitiesForEvent() {
                             fetch(`https://info442.chiptang.com/lookup/staff/info?staffId=${activity.staff_id}`)
                                 .then(response => response.json())
                                 .then(staffInfo => {
-                                    checkInByInfo = `Check-in by Staff: ${staffInfo.name}`;
+                                    checkInByInfo = `checked in by ${staffInfo.role} ${staffInfo.name} (ID ${activity.staff_id})`;
                                     updateActivityElement(activity, childInfo, activityElement, checkInByInfo);
                                 });
                         } else if (activity.family_id) {
                             fetch(`https://info442.chiptang.com/lookup/family/info?familyId=${activity.family_id}`)
                                 .then(response => response.json())
                                 .then(familyInfo => {
-                                    checkInByInfo = `Check-in by Family: ${familyInfo.guardian_name}`;
+                                    checkInByInfo = `checked in by Family ${familyInfo.guardian_name} (ID ${activity.family_id})`;
                                     updateActivityElement(activity, childInfo, activityElement, checkInByInfo);
                                 });
                         }
@@ -246,14 +253,36 @@ function fetchActivitiesForEvent() {
 
 function updateActivityElement(activity, childInfo, element, checkInByInfo) {
     element.innerHTML = `
-        <strong>${checkInByInfo}</strong><br>
-        <strong>Child Name:</strong> ${childInfo.child_name}<br>
-        <strong>Child ID:</strong> ${activity.child_id}<br>
+        <strong>${childInfo.child_name} (ID ${activity.child_id}) ${checkInByInfo}</strong><br>
         <strong>Location:</strong> ${activity.location}<br>
         <strong>Date:</strong> ${activity.date}<br>
         <strong>Time:</strong> ${activity.time}<br>
     `;
     document.getElementById('activity_list').appendChild(element);
+}
+
+function fetchBulletin(userId) {
+    fetch(`https://info442.chiptang.com/lookup/bulletin?staffId=${userId}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(bulletinInfos => {
+        const bulletinList = document.getElementById('bulletin_list');
+        // Ensure the list is empty before adding new bulletins
+        bulletinList.innerHTML = ''; 
+
+        bulletinInfos.forEach(bulletinInfo => {
+            // Create a new div for each bulletin message
+            const bulletinElement = document.createElement('div');
+            bulletinElement.className = 'info-div';
+            bulletinElement.innerHTML = `${bulletinInfo.message} (ID ${bulletinInfo.bulletin_id})`;
+            bulletinList.appendChild(bulletinElement);
+        });
+    })
+    .catch(error => console.error('Error fetching bulletin info:', error));
 }
 
 
@@ -375,3 +404,29 @@ function checkInChild() {
     });
 }
 
+function addBulletin(e) {
+    e.preventDefault();
+    const userId = getQueryParam('id');
+    const message = document.getElementById('message').value;
+
+    fetch('https://info442.chiptang.com/create/bulletin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ staffId: userId, message: message })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to add bulletin');
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert(data);
+        document.getElementById('message').value = '';
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error adding bulletin:', error);
+        alert('Error adding bulletin: ' + error);
+    });
+}
