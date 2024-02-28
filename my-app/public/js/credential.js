@@ -23,19 +23,47 @@ document.addEventListener('DOMContentLoaded', function() {
         signUpBox.style.display = 'none';
     });
 
+    // Role form
+    const signUpTypeSelect = document.getElementById('sign_up_type');
+
+    function handleSignUpTypeChange() {
+        const selectedType = signUpTypeSelect.value;
+        const roleInputExists = document.getElementById('role'); // Check if the Role input already exists
+
+        // Add the Role input if 'staff' is selected and it doesn't already exist
+        if (selectedType === 'staff' && !roleInputExists) {
+            const roleDiv = document.createElement('div');
+            roleDiv.innerHTML = `
+                <label for="role">Role:</label>
+                <input type="text" id="role" name="role" required>
+            `;
+            signUpForm.insertBefore(roleDiv, signUpForm.querySelector('button')); // Insert before the submit button
+        } 
+        // Remove the Role input if it exists and 'staff' is not selected
+        else if (selectedType !== 'staff' && roleInputExists) {
+            roleInputExists.parentNode.remove();
+        }
+    }
+
+    // Listen for changes to the sign-up type select element
+    signUpTypeSelect.addEventListener('change', handleSignUpTypeChange);
+
     // Handle Sign Up form submission
     signUpForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const formData = new FormData(signUpForm);
+        const accountType = formData.get('signUpType');
+        const role = accountType === 'parent' ? 'family' : formData.get('role');
+
         const data = {
             name: formData.get('name'),
             email: formData.get('email'),
             phone: formData.get('phone'),
             password: formData.get('sign_up_password'),
-            type: formData.get('signUpType')
+            ...(accountType === 'staff' && { role: formData.get('role') })
         };
 
-        const apiUrl = data.type === 'parent' ? 'https://info442.chiptang.com/create/family' : 'https://info442.chiptang.com/create/staff';
+        const apiUrl = accountType === 'parent' ? 'https://info442.chiptang.com/create/family' : 'https://info442.chiptang.com/create/staff';
 
         fetch(apiUrl, {
             method: 'POST',
@@ -52,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(responseData => {
             console.log(responseData);
-            const id = data.type === 'parent' ? responseData.familyId : responseData.staffId;
+            const id = accountType === 'parent' ? responseData.familyId : responseData.staffId;
             console.log(id);
             if (id === undefined) {
                 throw new Error('ID is undefined in the response.');
@@ -110,10 +138,8 @@ document.addEventListener('DOMContentLoaded', function() {
             logInBox.style.display = 'none';
 
             if (data.type === 'parent') {
-                familyProfileBox.style.display = 'block';
                 window.location.href = 'profile_family.html?id=' + id;
             } else {
-                staffProfileBox.style.display = 'block';
                 window.location.href = 'profile_staff.html?id=' + id;
             }
         })

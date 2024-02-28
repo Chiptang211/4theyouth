@@ -81,6 +81,7 @@ function fetchStaffInfo(userId) {
             document.getElementById('user_id').textContent = userId;
             document.getElementById('phone').textContent = data.phone;
             document.getElementById('email').textContent = data.email;
+            document.getElementById('role').textContent = data.role;
         })
         .catch(error => console.error('Error fetching staff info:', error));
 }
@@ -105,9 +106,9 @@ function fetchEventList(userId) {
                             const eventElement = document.createElement('div');
                             eventElement.className = 'info-div';
                             eventElement.innerHTML = `
-                            <strong>Event Name:</strong> ${eventInfo.event_name} (ID ${eventId})<br>
-                            <strong>Event Date:</strong> ${eventInfo.event_date}<br>
-                            <strong>Event Description:</strong> ${eventInfo.event_description}<br>
+                            <strong>${eventInfo.event_name}</strong> (ID ${eventId})<br>
+                            ${eventInfo.event_date}<br>
+                            ${eventInfo.event_description}<br>
                             `;
                             eventListDiv.appendChild(eventElement);
                         });
@@ -192,11 +193,12 @@ function fetchChildrenForEvent() {
                                             const familyElement = document.createElement('div');
                                             familyElement.className = 'info-div';
                                             familyElement.innerHTML = `
-                                                <strong>Child Name:</strong> ${childInfo.child_name} (ID ${childId})<br>
-                                                <strong>Guardian Name:</strong> ${familyInfo.guardian_name}<br>
-                                                <strong>Email:</strong> ${familyInfo.email}<br>
-                                                <strong>Phone:</strong> ${familyInfo.phone}<br>
-                                                <strong>Remarks:</strong> ${childInfo.child_remarks}<br>
+                                                <strong>${childInfo.child_name}</strong> (ID ${childId})<br>
+                                                ${childInfo.child_remarks}<br>
+                                                <br>
+                                                Contact: ${familyInfo.guardian_name} (ID ${familyId})<br>
+                                                <a href="mailto:${familyInfo.email}">${familyInfo.email}</a>
+                                                <a href="tel:${familyInfo.phone}">${familyInfo.phone}</a><br>
                                             `;
                                             childrenList.appendChild(familyElement);
                                         })
@@ -231,14 +233,14 @@ function fetchActivitiesForEvent() {
                             fetch(`https://info442.chiptang.com/lookup/staff/info?staffId=${activity.staff_id}`)
                                 .then(response => response.json())
                                 .then(staffInfo => {
-                                    checkInByInfo = `Check-in by Staff: ${staffInfo.name}`;
+                                    checkInByInfo = `checked in by ${staffInfo.role} ${staffInfo.name} (ID ${activity.staff_id})`;
                                     updateActivityElement(activity, childInfo, activityElement, checkInByInfo);
                                 });
                         } else if (activity.family_id) {
                             fetch(`https://info442.chiptang.com/lookup/family/info?familyId=${activity.family_id}`)
                                 .then(response => response.json())
                                 .then(familyInfo => {
-                                    checkInByInfo = `Check-in by Family: ${familyInfo.guardian_name}`;
+                                    checkInByInfo = `checked in by Family ${familyInfo.guardian_name} (ID ${activity.family_id})`;
                                     updateActivityElement(activity, childInfo, activityElement, checkInByInfo);
                                 });
                         }
@@ -251,9 +253,7 @@ function fetchActivitiesForEvent() {
 
 function updateActivityElement(activity, childInfo, element, checkInByInfo) {
     element.innerHTML = `
-        <strong>${checkInByInfo}</strong><br>
-        <strong>Child Name:</strong> ${childInfo.child_name}<br>
-        <strong>Child ID:</strong> ${activity.child_id}<br>
+        <strong>${childInfo.child_name} (ID ${activity.child_id}) ${checkInByInfo}</strong><br>
         <strong>Location:</strong> ${activity.location}<br>
         <strong>Date:</strong> ${activity.date}<br>
         <strong>Time:</strong> ${activity.time}<br>

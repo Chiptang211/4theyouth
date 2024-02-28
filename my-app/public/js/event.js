@@ -33,9 +33,11 @@ function fetchStaffInfo(staffId) {
         .then(response => response.json())
         .then(data => {
             return {
+                id: staffId,
                 name: data.name,
                 email: data.email,
-                phone: data.phone
+                phone: data.phone,
+                role: data.role
             };
         })
         .catch(error => {
@@ -74,7 +76,9 @@ function displayEvent(event, staffInfo, date) {
     eventElement.innerHTML = `
         <strong>${event.event_name}</strong> (ID ${event.event_id})<br>
         ${event.event_description}<br>
-        ${staffInfo.name}, <a href="mailto:${staffInfo.email}">${staffInfo.email}</a>, <a href="tel:${staffInfo.phone}">${staffInfo.phone}</a></p>
+        <br>
+        ${staffInfo.role}, ${staffInfo.name} (ID ${staffInfo.id})<br>
+        <a href="mailto:${staffInfo.email}">${staffInfo.email}</a>, <a href="tel:${staffInfo.phone}">${staffInfo.phone}</a>
     `;
     dateSection.appendChild(eventElement);
 }

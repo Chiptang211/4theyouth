@@ -117,8 +117,8 @@ app.post('/addchild/family', async (req, res) => {
 
 app.post('/create/staff', async (req, res) => {
   try {
-      let { name, email, phone, password } = req.body;
-      if (!name || !email || !phone || !password) {
+      let { name, email, phone, password, role } = req.body;
+      if (!name || !email || !phone || !password || !role) {
           return res.status(400).send('Missing data');
       }
 
@@ -134,7 +134,7 @@ app.post('/create/staff', async (req, res) => {
           return res.status(404).send('Phone already exists in the database');
       }
 
-      const result = await db.run(`INSERT INTO staff (name, email, phone, password) VALUES (?, ?, ?, ?)`, [name, email, phone, password]);
+      const result = await db.run(`INSERT INTO staff (name, email, phone, password, role) VALUES (?, ?, ?, ?, ?)`, [name, email, phone, password, role]);
 
       if (result && result.lastID) {
           return res.status(201).json({ staffId: result.lastID });
@@ -488,11 +488,11 @@ app.get('/lookup/staff/info', async (req, res) => {
         const db = await getDBConnection();
         if (staffId === 'all') {
             // Fetch and return info for all staff members
-            const allStaffInfo = await db.all(`SELECT staff_id, name, email, phone FROM staff`);
+            const allStaffInfo = await db.all(`SELECT staff_id, name, email, phone, role FROM staff`);
             return res.status(200).json(allStaffInfo);
         } else if (staffId) {
             // Fetch and return info for a specific staff member
-            const info = await db.get(`SELECT name, email, phone FROM staff WHERE staff_id = ?`, [staffId]);
+            const info = await db.get(`SELECT name, email, phone, role FROM staff WHERE staff_id = ?`, [staffId]);
             if (!info) {
                 return res.status(404).send('Staff not found');
             }

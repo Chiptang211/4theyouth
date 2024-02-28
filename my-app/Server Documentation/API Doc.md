@@ -1,5 +1,5 @@
 # API Documentation
-##Last Updated Feb 26
+##Last Updated Feb 28
 
 ## Host your server locally
 cd to this folder
@@ -110,7 +110,8 @@ JSON
   "name": "Alice Smith",
   "email": "alice.smith@example.com",
   "phone": "0987654321",
-  "password": "password"
+  "password": "password",
+  "role": "Camp Counselor"
 }
 
 **Example Response:**
@@ -438,7 +439,8 @@ JSON
 {
   "name": "Jane Smith",
   "email": "jane@example.com",
-  "phone": "1234567890"
+  "phone": "1234567890",
+  "role": "Camp Counselor"
 }
 
 ***all staff***
@@ -447,13 +449,15 @@ JSON
     "staff_id": 1,
     "name": "John Doe",
     "email": "johndoe@example.com",
-    "phone": "123-456-7890"
+    "phone": "123-456-7890",
+    "role": "Camp Counselor"
   },
   {
     "staff_id": 2,
     "name": "Jane Smith",
     "email": "janesmith@example.com",
-    "phone": "098-765-4321"
+    "phone": "098-765-4321",
+    "role": "Camp Counselor"
   }
 ]
 

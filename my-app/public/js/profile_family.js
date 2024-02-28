@@ -71,8 +71,8 @@ function fetchChildrenList(userId) {
                         const childElement = document.createElement('div');
                         childElement.className = 'info-div';
                         childElement.innerHTML = `
-                        <strong>Child Name:</strong> ${childInfo.child_name} (ID ${childId})<br>
-                        <strong>Child Remarks:</strong> ${childInfo.child_remarks}<br>
+                        <strong>${childInfo.child_name}</strong> (ID ${childId})<br>
+                        ${childInfo.child_remarks}<br>
                         `;
                         childrenListDiv.appendChild(childElement);
                     });
@@ -122,13 +122,13 @@ function fetchEventsForChild() {
                                     const eventElement = document.createElement('div');
                                     eventElement.className = 'info-div';
                                     eventElement.innerHTML = `
-                                        <strong>Event Name:</strong> ${info.event_name} (ID ${event.event_id})<br>
-                                        <strong>Event Date:</strong> ${info.event_date}<br>
-                                        <strong>Event Description:</strong> ${info.event_description}<br>
+                                        <strong>${info.event_name}</strong> (ID ${event.event_id})<br>
+                                        ${info.event_date}<br>
+                                        ${info.event_description}<br>
                                         <br>
-                                        <strong>Staff Name:</strong> ${staffInfo.name}<br>
-                                        <strong>Staff Email:</strong> ${staffInfo.email}<br>
-                                        <strong>Staff Phone:</strong> ${staffInfo.phone}<br>
+                                        <strong>${staffInfo.role}, ${staffInfo.name}</strong> (ID ${info.staff_id})<br>
+                                        <a href="mailto:${staffInfo.email}">${staffInfo.email}</a>
+                                        <a href="tel:${staffInfo.phone}">${staffInfo.phone}</a><br>
                                     `;
                                     eventsList.appendChild(eventElement);
                                 })
@@ -156,17 +156,17 @@ function fetchActivitiesForChild() {
                     .then(response => response.json())
                     .then(eventInfo => {
                         const info = eventInfo[0];
-                        
+
                         let checkInDetailPromise;
 
                         if (activity.staff_id) {
                             checkInDetailPromise = fetch(`https://info442.chiptang.com/lookup/staff/info?staffId=${activity.staff_id}`)
                                 .then(response => response.json())
-                                .then(staffInfo => `Checked in by Staff: ${staffInfo.name}`);
+                                .then(staffInfo => `Checked in by ${staffInfo.role}: ${staffInfo.name} (ID ${activity.staff_id})`);
                         } else if (activity.family_id) {
                             checkInDetailPromise = fetch(`https://info442.chiptang.com/lookup/family/info?familyId=${activity.family_id}`)
                                 .then(response => response.json())
-                                .then(familyInfo => `Checked in by Family: ${familyInfo.guardian_name}`);
+                                .then(familyInfo => `Checked in by Family: ${familyInfo.guardian_name} (ID ${activity.family_id})`);
                         }
 
                         checkInDetailPromise.then(checkInDetail => {
@@ -174,7 +174,7 @@ function fetchActivitiesForChild() {
                             activityElement.className = 'info-div';
                             activityElement.innerHTML = `
                                 <strong>${checkInDetail}</strong><br>
-                                <strong>Event Name:</strong> ${info.event_name}<br>
+                                <strong>Event Name:</strong> ${info.event_name} (ID ${activity.event_id})<br>
                                 <strong>Location:</strong> ${activity.location}<br>
                                 <strong>Date:</strong> ${activity.date}<br>
                                 <strong>Time:</strong> ${activity.time}<br>
