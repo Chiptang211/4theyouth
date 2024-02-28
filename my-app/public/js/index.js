@@ -1,6 +1,6 @@
 'use strict';
 
-/ Agenda
+// Agenda
 // Eddie, does this look right? I recovered it from GitHub history
 document.addEventListener('DOMContentLoaded', function() {
   fetchEvents();
