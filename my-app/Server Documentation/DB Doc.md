@@ -16,6 +16,14 @@ CREATE TABLE "activity" (
 	FOREIGN KEY("family_id") REFERENCES "guardian"("family_id")
 );
 
+CREATE TABLE "bulletin" (
+	"bulletin_id"	INTEGER NOT NULL UNIQUE,
+	"staff_id"	INTEGER NOT NULL,
+	"message"	INTEGER NOT NULL,
+	PRIMARY KEY("bulletin_id" AUTOINCREMENT),
+	FOREIGN KEY("staff_id") REFERENCES "staff"("staff_id")
+);
+
 CREATE TABLE "child" (
 	"child_id"	INTEGER NOT NULL UNIQUE,
 	"child_name"	INTEGER NOT NULL,
@@ -60,12 +68,13 @@ CREATE TABLE "guardian" (
 	PRIMARY KEY("family_id" AUTOINCREMENT)
 );
 
-CREATE TABLE "guardian" (
-	"family_id"	INTEGER NOT NULL UNIQUE,
-	"guardian_name"	TEXT NOT NULL,
-	"email"	TEXT NOT NULL UNIQUE,
-	"phone"	TEXT NOT NULL UNIQUE,
+CREATE TABLE "staff" (
+	"staff_id"	INTEGER NOT NULL UNIQUE,
+	"name"	TEXT NOT NULL,
+	"email"	TEXT NOT NULL,
+	"phone"	INTEGER NOT NULL,
 	"password"	TEXT NOT NULL,
-	PRIMARY KEY("family_id" AUTOINCREMENT)
+	"role"	INTEGER NOT NULL,
+	PRIMARY KEY("staff_id" AUTOINCREMENT)
 );
 `

@@ -1,5 +1,5 @@
 # API Documentation
-##Last Updated Feb 26
+##Last Updated Feb 28
 
 ## Host your server locally
 cd to this folder
@@ -110,7 +110,8 @@ JSON
   "name": "Alice Smith",
   "email": "alice.smith@example.com",
   "phone": "0987654321",
-  "password": "password"
+  "password": "password",
+  "role": "Camp Counselor"
 }
 
 **Example Response:**
@@ -148,6 +149,7 @@ JSON
 Returns 400 if required data is missing.
 Returns 404 if login failed: user not found or password incorrect.
 Returns 500 for internal server errors.
+
 
 ## 6. Create Event
 **Request URL:** /create/event
@@ -252,7 +254,28 @@ Returns 404 for non-existent IDs.
 Returns 500 for server errors.
 
 
-## 10. Lookup Family's Children
+## 10. Create Bulletin
+**Request URL:** /create/bulletin
+**Request Format:** JSON
+**Request Type:** POST
+**Description:** Allows staff to post message on bulletin board.
+**Example Request:**
+JSON
+{
+    "staffId": 1,
+    "message": "this is a message"
+}
+
+**Example Response:**
+"Bulletin message successfully posted."
+
+**Error Handling:**
+Returns 400 for missing data.
+Returns 404 for non-existent IDs.
+Returns 500 for server errors.
+
+
+## 11. Lookup Family's Children
 **Request URL:** /lookup/family/child
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -269,7 +292,7 @@ Returns 400 for invalid queries.
 Returns 500 for server errors.
 
 
-## 11. Lookup Family Info
+## 12. Lookup Family Info
 **Request URL:** /lookup/family/info
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -291,7 +314,7 @@ Returns 404 for non-existent family.
 Returns 500 for server errors.
 
 
-## 12. Lookup Child's Events
+## 13. Lookup Child's Events
 **Request URL:** /lookup/child/event
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -318,7 +341,7 @@ Returns 400 for invalid queries.
 Returns 500 for server errors.
 
 
-## 13. Child Information Lookup
+## 14. Child Information Lookup
 **Request URL:** /lookup/child/info
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -354,7 +377,7 @@ Returns 404 Not Found if no child is found with the given ID.
 Returns 500 Internal Server Error for any server-side issues.
 
 
-## 14. Lookup Children's Family
+## 15. Lookup Children's Family
 **Request URL:** /lookup/child/family
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -371,7 +394,7 @@ Returns 400 for invalid queries.
 Returns 500 for server errors.
 
 
-## 14. Child Activity Lookup
+## 16. Child Activity Lookup
 **Request URL:** /lookup/child/activity
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -398,7 +421,7 @@ Returns 400 Bad Request if the childId parameter is missing or invalid.
 Returns 500 Internal Server Error for any server-side issues.
 
 
-## 15. Staff Information Lookup
+## 17. Staff Information Lookup
 **Request URL:** /lookup/staff/info
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -416,7 +439,8 @@ JSON
 {
   "name": "Jane Smith",
   "email": "jane@example.com",
-  "phone": "1234567890"
+  "phone": "1234567890",
+  "role": "Camp Counselor"
 }
 
 ***all staff***
@@ -425,13 +449,15 @@ JSON
     "staff_id": 1,
     "name": "John Doe",
     "email": "johndoe@example.com",
-    "phone": "123-456-7890"
+    "phone": "123-456-7890",
+    "role": "Camp Counselor"
   },
   {
     "staff_id": 2,
     "name": "Jane Smith",
     "email": "janesmith@example.com",
-    "phone": "098-765-4321"
+    "phone": "098-765-4321",
+    "role": "Camp Counselor"
   }
 ]
 
@@ -441,7 +467,7 @@ Returns 404 Not Found if no staff is found with the given ID.
 Returns 500 Internal Server Error for any server-side issues.
 
 
-## 16. Staff's Event Lookup
+## 18. Staff's Event Lookup
 **Request URL:** /lookup/staff/event
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -458,7 +484,7 @@ Returns 400 Bad Request if the staffId parameter is missing or invalid.
 Returns 500 Internal Server Error for any server-side issues.
 
 
-## 17. Event's Children Lookup
+## 19. Event's Children Lookup
 **Request URL:** /lookup/event/child
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -475,7 +501,7 @@ Returns 400 Bad Request if the eventId parameter is missing or invalid.
 Returns 500 Internal Server Error for any server-side issues.
 
 
-## 18. Event's Info Lookup
+## 20. Event's Info Lookup
 **Request URL:** /lookup/event/info
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -504,7 +530,6 @@ GET /lookup/event/info?eventId=3
   }
 ]
 
-
 ***Single Event***
 JSON
 [
@@ -521,7 +546,7 @@ Returns 400 Bad Request if the eventId parameter is missing or invalid.
 Returns 500 Internal Server Error for any server-side issues.
 
 
-## 19. Event Activity Lookup
+## 21. Event Activity Lookup
 **Request URL:** /lookup/event/activity
 **Request Format:** Query Parameters
 **Request Type:** GET
@@ -545,4 +570,35 @@ JSON
 
 **Error Handling:**
 Returns 400 Bad Request if the childId parameter is missing or invalid.
+Returns 500 Internal Server Error for any server-side issues.
+
+
+## 22. Bulletin Message Lookup
+**Request URL:** /lookup/bulletin
+**Request Format:** Query Parameters
+**Request Type:** GET
+**Description:** Retrieves all bulletin messages, or messages made by a specific staff.
+**Example Request:**
+***All Events***
+/lookup/bulletin?staffId=all
+
+***Single Event***
+/lookup/bulletin?staffId=1
+
+**Example Response:**
+[
+  {
+    "bulletin_id": 3,
+    "staff_id": 1,
+    "message": "this is a message"
+  },
+  {
+    "bulletin_id": 1,
+    "staff_id": 1,
+    "message": "this is a message"
+  }
+]
+
+**Error Handling:**
+Returns 400 Bad Request if the staffId parameter is missing or invalid.
 Returns 500 Internal Server Error for any server-side issues.
