@@ -160,3 +160,21 @@ footer {
 .profile-info ul li {
   margin-bottom: 5px;
 }
+
+.agenda-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 20px;
+}
+
+.daily-agenda {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-right: 20px;
+}
