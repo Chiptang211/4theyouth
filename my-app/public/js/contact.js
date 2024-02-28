@@ -18,7 +18,8 @@ function populateStaffList(staffList) {
         staffDiv.innerHTML = `
             <strong>${staff.name} </strong> (ID ${staff.staff_id})<br>
             <strong>Email:</strong> <a href="mailto:${staff.email}">${staff.email}</a><br>
-            <strong>Phone:</strong> ${staff.phone}<br>
+            <strong>Phone:</strong> <a href="tel:${staff.phone}">${staff.phone}</a><br>
+            <br>
         `;
         staffListDiv.appendChild(staffDiv);
 

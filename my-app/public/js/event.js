@@ -72,9 +72,9 @@ function displayEvent(event, staffInfo, date) {
     const eventElement = document.createElement('div');
     eventElement.className = 'event info-div';
     eventElement.innerHTML = `
-        <h3>${event.event_name}</h3>
-        <p>${event.event_description}</p>
-        <p><strong>Staff:</strong> ${staffInfo.name}, <a href="mailto:${staffInfo.email}">${staffInfo.email}</a>, <a href="tel:${staffInfo.phone}">${staffInfo.phone}</a></p>
+        <strong>${event.event_name}</strong> (ID ${event.event_id})<br>
+        ${event.event_description}<br>
+        ${staffInfo.name}, <a href="mailto:${staffInfo.email}">${staffInfo.email}</a>, <a href="tel:${staffInfo.phone}">${staffInfo.phone}</a></p>
     `;
     dateSection.appendChild(eventElement);
 }
