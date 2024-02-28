@@ -2,6 +2,8 @@
 
 // Agenda
 // Eddie, does this look right? I recovered it from GitHub history
+
+/*
 document.addEventListener('DOMContentLoaded', function() {
   fetchEvents();
 });
@@ -65,6 +67,62 @@ function displayEvent(event, staffInfo, date) {
   `;
   dateSection.appendChild(eventElement);
 }
+*/
+
+
+// Chip's version
+document.addEventListener('DOMContentLoaded', function() {
+    fetchEvents();
+});
+
+function fetchEvents() {
+  fetch('https://info442.chiptang.com/lookup/event/info?eventId=all')
+      .then(response => response.json())
+      .then(events => {
+          const eventsByDayOfWeek = groupEventsByDayOfWeek(events);
+          const sortedDays = sortDaysOfWeek(Object.keys(eventsByDayOfWeek));
+          sortedDays.forEach(day => {
+              displayEventsByDay(day, eventsByDayOfWeek[day]);
+          });
+      })
+      .catch(error => console.error('Error fetching events:', error));
+}
+
+function groupEventsByDayOfWeek(events) {
+  return events.reduce((acc, event) => {
+      const eventDate = new Date(event.event_date);
+      const dayOfWeek = eventDate.toLocaleString('en-US', { weekday: 'long' });
+      (acc[dayOfWeek] = acc[dayOfWeek] || []).push(event);
+      return acc;
+  }, {});
+}
+
+function sortDaysOfWeek(days) {
+  const dayOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return days.sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b));
+}
+
+function displayEventsByDay(day, events) {
+  const eventList = document.getElementById('event_day_list'); // Add things to the div under section in HTML
+  let daySection = document.querySelector(`#day-${day}`);
+  if (!daySection) {
+      daySection = document.createElement('div');
+      daySection.className = 'daily-agenda'; // So it works with your CSS
+      daySection.id = `day-${day}`;
+      daySection.innerHTML = `<h2>${day}</h2>`;
+      eventList.appendChild(daySection);
+  }
+
+  events.forEach(event => {
+      const eventElement = document.createElement('div');
+      eventElement.className = 'event day-div';
+      eventElement.textContent = event.event_name; // Only display the event name
+      daySection.appendChild(eventElement);
+  });
+}
+
+
+
 
 
 
@@ -99,7 +157,7 @@ async function fetchStaffInfo() {
       bulletinMessages.forEach(message => {
         const staffName = staffMap.get(message.staff_id) || 'Unknown Staff';
         const messageElement = document.createElement('div');
-        messageElement.className = 'info-div';
+        messageElement.className = 'daily-agenda'; //I added class name here so it is using your CSS
         messageElement.innerHTML = `
           <strong>${staffName} </strong> (ID ${message.staff_id})<br>
           ${message.message}<br>
@@ -111,6 +169,7 @@ async function fetchStaffInfo() {
       document.getElementById('bulletin').innerText = 'Failed to load bulletin messages.';
     }
   }
+
 
   // Call the function to display bulletins with staff names on page load
   document.addEventListener('DOMContentLoaded', displayBulletinWithStaffNames);
