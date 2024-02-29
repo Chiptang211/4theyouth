@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const data = {
             name: formData.get('name'),
-            email: formData.get('email'),
+            email: formData.get('email').toLocaleLowerCase(),
             phone: formData.get('phone'),
             password: formData.get('sign_up_password'),
             ...(accountType === 'staff' && { role: formData.get('role') })
@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         const formData = new FormData(logInForm);
         const data = {
-            credential: formData.get('credential'),
+            credential: formData.get('credential').toLocaleLowerCase(),
             password: formData.get('log_in_password'),
             type: formData.get('logInType')
         };
