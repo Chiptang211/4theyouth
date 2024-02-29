@@ -16,7 +16,7 @@ function populateStaffList(staffList) {
         staffDiv.className = 'staff-info';
         staffDiv.className = 'info-div';
         staffDiv.innerHTML = `
-            <strong>${staff.role}, ${staff.name} </strong> (ID ${staff.staff_id})<br>
+            <h2><strong>${staff.role}, ${staff.name} </strong> (ID ${staff.staff_id})</h2>
             <a href="mailto:${staff.email}">${staff.email}</a>
             <a href="tel:${staff.phone}">${staff.phone}</a><br>
             <br>
