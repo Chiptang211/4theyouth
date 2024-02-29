@@ -157,7 +157,7 @@ async function fetchStaffInfo() {
       bulletinMessages.forEach(message => {
         const staffName = staffMap.get(message.staff_id) || 'Unknown Staff';
         const messageElement = document.createElement('div');
-        messageElement.className = 'daily-agenda'; //I added class name here so it is using your CSS
+        messageElement.className = 'info-div';
         messageElement.innerHTML = `
           <strong>${staffName} </strong> (ID ${message.staff_id})<br>
           ${message.message}<br>
@@ -189,7 +189,7 @@ async function fetchStaffInfo() {
         const staffProfileElement = document.createElement('div');
         staffProfileElement.className = 'staff-profile';
         staffProfileElement.innerHTML = `
-          <img src="img/hung.jpeg" alt="Staff ${staff.name}" class="profile-img">
+          <img src="img/staff/${staff.name}.jpg" alt="Staff ${staff.name}" class="profile-img">
           <div class="profile-info">
               <h2>${staff.name}</h2>
               <ul>
