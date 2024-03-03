@@ -3,6 +3,7 @@ body {
   color: black;
   background-color: #7caf8e;
   line-height: 1.5;
+  margin: 0;
 }
 
 h1, h2, p {
@@ -32,11 +33,11 @@ h1, h2, p {
   }
   
   .topnav a {
+    display: inline-block;
     color: white;
     padding: 10px 20px;
     text-decoration: none;
-    margin-right: 10px;
-  }
+}
   
   .favicon {
     width: 30px;
@@ -183,4 +184,20 @@ footer {
   align-items: center;
   text-align: center;
   margin-right: 20px;
+}
+
+.icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {
+    display: none;
+  }
+
+  /* Display the hamburger button */
+  .icon {
+    display: block;
+    float: right;
+  }
 }
