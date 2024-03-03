@@ -137,12 +137,3 @@ async function fetchStaffInfo() {
   // Call the function to display staff info on page load
   document.addEventListener('DOMContentLoaded', fetchAndDisplayStaffInfo);
 
-// for nav menu
-  function toggleMenu() {
-    var x = document.getElementById("menuItems");
-    if (x.style.display === "block") {
-        x.style.display = "none";
-    } else {
-        x.style.display = "block";
-    }
-}

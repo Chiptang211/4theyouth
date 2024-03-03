@@ -186,22 +186,3 @@ footer {
   margin-right: 20px;
 }
 
-#menuItems {
-  display: none;
-}
-
-@media only screen and (max-width: 600px) {
-  .topnav.responsive #menuItems {
-    display: block;
-    position: absolute;
-    background-color: #9BC675;
-    width: 100%;
-    top: 60px;
-  }
-
-  .topnav.responsive #menuItems a {
-    display: block;
-    padding: 10px;
-    text-align: center;
-  }
-}
