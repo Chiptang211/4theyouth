@@ -186,18 +186,22 @@ footer {
   margin-right: 20px;
 }
 
-.icon {
+#menuItems {
   display: none;
 }
 
-@media screen and (max-width: 600px) {
-  .topnav a:not(:first-child) {
-    display: none;
+@media only screen and (max-width: 600px) {
+  .topnav.responsive #menuItems {
+    display: block;
+    position: absolute;
+    background-color: #9BC675;
+    width: 100%;
+    top: 60px;
   }
 
-  /* Display the hamburger button */
-  .icon {
+  .topnav.responsive #menuItems a {
     display: block;
-    float: right;
+    padding: 10px;
+    text-align: center;
   }
 }
