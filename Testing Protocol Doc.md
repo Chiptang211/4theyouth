@@ -1,52 +1,55 @@
 # Testing Protocol Documentation
 
 ## 1. API Testing
-**Tools**
+- Testing all API functionalities ensures that requests are correctly processed, responses are accurate, and the database accurately reflects changes.
+
+### Tools
 - Thunder Client: Used for sending GET and POST requests to API endpoints.
 - DB Browser: Used for inspecting the database to ensure correct data recording and retrieval.
 - API Documentation: Referenced to ensure adherence to specified request formats, response structures, and error handling protocols.
 
-**Testing POST Requests**
+### Testing POST Requests**
 For each POST endpoint described in the API documentation:
 
-***Prepare the Request:***
+**Prepare the Request:**
 - Construct a POST request in Thunder Client with the correct URL as specified in the API documentation.
 - Include the correct JSON body information as outlined in the example requests of the API documentation.
 
-***Send the Request:***
+**Send the Request:**
 - Use Thunder Client to send the request to the API.
 
-***Verify Database Entries:***
+**Verify Database Entries:**
 - Use DB Browser to inspect the relevant tables in the database.
 - Ensure that the correct data has been recorded in the database, matching the sent request body.
 
-***Check for Expected Responses:***
+**Check for Expected Responses:**
 - Verify that the API response matches the example response provided in the API documentation.
 - Ensure that the correct status codes and data structures are returned by the API.
 
-***Error Handling Verification:***
+**Error Handling Verification:**
 - Send variations of the request with missing or incorrect information to test error handling.
 - Confirm that the API returns the expected error status codes and messages as specified in the documentation.
 
-**Testing GET Requests**
+### Testing GET Requests**
 For each GET endpoint described in the API documentation:
 
-***Prepare the Request:***
+**Prepare the Request:**
 - Construct a GET request in Thunder Client with the correct URL and query parameters as specified in the API documentation.
 
-***Send the Request:***
+**Send the Request:**
 - Use Thunder Client to send the request to the API.
 
-***Verify Response Data:***
+**Verify Response Data:**
 - Check if the expected information is retrieved in the response, as outlined in the API documentation.
 
-***Error Handling Verification:***
+**Error Handling Verification:**
 - Send requests with unexpected queries or incorrect parameters to test error handling.
 - Ensure that the API returns the expected error status codes and messages as specified in the documentation.
 
 ## 2. Front-end Testing
 Testing all use cases through the frontend interface to ensure that the expected behaviors and information are displayed correctly, and the correct information is stored in the database.
 
+### Credential Page
 **Credential Page - UI Design**
 -   Toggle between signup and login views.
 
@@ -67,6 +70,7 @@ Testing all use cases through the frontend interface to ensure that the expected
 -   Ensure all required fields are completed before calling the API.
 -   If credentials match those in the staff table, return the user ID and redirect to the appropriate staff profile; otherwise, display the correct error message (verify with the staff table).
 
+### Family Profile Page
 **Family Profile Page - UI Design**
 -   Toggle between different views.
 
@@ -98,6 +102,7 @@ Testing all use cases through the frontend interface to ensure that the expected
 -   Display the correct message.
 -   Verify the accurate recording of data in the activity table.
 
+### Staff Profile Page
 **Staff Profile Page - UI Design**
 -   Toggle between different views.
 
@@ -141,6 +146,7 @@ Testing all use cases through the frontend interface to ensure that the expected
 **Staff Profile Page - Retrieving Bulletin Board Messages Associated with Staff**
 -   Display all messages associated with the user (verify with the bulletin table).
 
+### Home Page
 **Home Page - Weekly Agenda**
 -   Display correct events and their dates on the appropriate day (verify with the event table).
 
@@ -150,9 +156,11 @@ Testing all use cases through the frontend interface to ensure that the expected
 **Home Page - Message Bulletin Board**
 -   Display correct bulletin messages and their associated staff (verify with the bulletin and staff tables).
 
+### Event Page
 **Events Page - Events**
 -   Display correct events and their associated staff information (verify with the event and staff tables).
 
+### Contact Page
 **Contact Page - Contact**
 -   Display all staff information (cross-reference with the staff table).
 -   Display events associated with staff (verify with the event table).
