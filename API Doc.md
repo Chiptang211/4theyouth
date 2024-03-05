@@ -1,27 +1,27 @@
 # API Documentation
-##Last Updated Feb 28
+##Last Updated Feb 29
 
-## Host your server locally
-cd to this folder
+## Host this API server locally
+`cd ~/my-app`
+change directory to my-app
 
 `npm init -y`
-leave everything at sefault
+set up node
 
 `npm install express sqlite3 sqlite cors`
-install additional libraries
+install additional dependencies
 
 `node server.js`
-run server
+run node server
 
 base url local: "http://localhost:8000" + request
-
 Optional Tools
 - Thunder Client in VS Code
 - DB Browser for SQLite
 
 
-## Connect to web API
-base url: "info442.chiptang.com" + request
+## Connect to Web API
+base url: "https://info442.chiptang.com" + request
 
 
 ## 1. Create Family
@@ -30,6 +30,7 @@ base url: "info442.chiptang.com" + request
 **Request Type:** POST
 **Description:** Adds a new family to the database, including guardian's name, email, phone number, and password.
 **Example Request:**
+```
 JSON
 {
   "name": "John Doe",
@@ -37,12 +38,15 @@ JSON
   "phone": "1234567890",
   "password": "password"
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "familyId": 1
 }
+```
 
 **Error Handling:**
 Returns 400 if required data is missing.
@@ -56,18 +60,22 @@ Returns 500 for internal server errors.
 **Request Type:** POST
 **Description:** Guardian Login with either email or phone as credential, and password.
 **Example Request:**
+```
 JSON
 {
   "credential": "john.doe@example.com",
   "password": "password"
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "message": "Login successful",
   "familyId": 1
 }
+```
 
 **Error Handling:**
 Returns 400 if required data is missing.
@@ -81,18 +89,22 @@ Returns 500 for internal server errors.
 **Request Type:** POST
 **Description:** Links a child with a family by inserting a new child and updating the family_link table.
 **Example Request:**
+```
 JSON
 {
   "childName": "Jane Doe",
   "familyId": 1,
   "remarks": "Jane is allergic to cats"
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "childId": 1
 }
+```
 
 **Error Handling:**
 Returns 404 if family ID does not exist or data is missing.
@@ -105,6 +117,7 @@ Returns 500 for internal errors.
 **Request Type:** POST
 **Description:** Adds a new staff member to the database.
 **Example Request:**
+```
 JSON
 {
   "name": "Alice Smith",
@@ -113,12 +126,15 @@ JSON
   "password": "password",
   "role": "Camp Counselor"
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "staffId": 1
 }
+```
 
 **Error Handling:**
 Returns 400 if required data is missing.
@@ -132,18 +148,22 @@ Returns 500 for other errors.
 **Request Type:** POST
 **Description:** Staff Login with either email or phone as credential, and password.
 **Example Request:**
+```
 JSON
 {
   "credential": "john.doe@example.com",
   "password": "password"
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "message": "Login successful",
   "staffId": 1
 }
+```
 
 **Error Handling:**
 Returns 400 if required data is missing.
@@ -157,6 +177,7 @@ Returns 500 for internal server errors.
 **Request Type:** POST
 **Description:** Creates a new event and associates it with a staff member.
 **Example Request:**
+```
 JSON
 {
   "name": "Summer Camp",
@@ -164,12 +185,15 @@ JSON
   "description": "Summer Camp Description",
   "date": "2024-02-28"
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "eventId": 1
 }
+```
 
 **Error Handling:**
 Returns 400 for missing data.
@@ -183,17 +207,21 @@ Returns 500 for internal server errors.
 **Request Type:** POST
 **Description:** Links a child to an event.
 **Example Request:**
+```
 JSON
 {
   "eventId": 1,
   "childId": 1
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "message": "Child successfully added to event."
 }
+```
 
 **Error Handling:**
 Returns 400 for missing data.
@@ -207,6 +235,7 @@ Returns 500 for internal server errors.
 **Request Type:** POST
 **Description:** Records a child's check-in to an event by a parent, including date, time, and location.
 **Example Request:**
+```
 JSON
 {
   "childId": 1,
@@ -216,12 +245,15 @@ JSON
   "location": "Main Hall",
   "familyId": 1
 }
+```
 
 **Example Response:**
+```
 JSON
 {
   "message": "Child successfully checked in to event by parent."
 }
+```
 
 **Error Handling:**
 Returns 400 for missing data.
@@ -235,6 +267,7 @@ Returns 500 for internal errors.
 **Request Type:** POST
 **Description:** Allows staff to check in a child for an event by submitting the necessary details.
 **Example Request:**
+```
 JSON
 {
   "childId": 1,
@@ -244,6 +277,7 @@ JSON
   "location": "Playground",
   "staffId": 3
 }
+```
 
 **Example Response:**
 "Child successfully checked in to event by staff."
@@ -260,11 +294,13 @@ Returns 500 for server errors.
 **Request Type:** POST
 **Description:** Allows staff to post message on bulletin board.
 **Example Request:**
+```
 JSON
 {
     "staffId": 1,
     "message": "this is a message"
 }
+```
 
 **Example Response:**
 "Bulletin message successfully posted."
@@ -284,8 +320,9 @@ Returns 500 for server errors.
 /lookup/family/child?familyId=1
 
 **Example Response:**
-JSON
+```
 [1, 2, 3]
+```
 
 **Error Handling:**
 Returns 400 for invalid queries.
@@ -301,12 +338,14 @@ Returns 500 for server errors.
 /lookup/family/info?familyId=1
 
 **Example Response:**
+```
 JSON
 {
   "guardian_name": "John Doe",
   "email": "john.doe@example.com",
   "phone": "1234567890"
 }
+```
 
 **Error Handling:**
 Returns 400 for invalid queries.
@@ -323,6 +362,7 @@ Returns 500 for server errors.
 /lookup/child/event?childId=1
 
 **Example Response:**
+```
 JSON
 
 [
@@ -335,6 +375,7 @@ JSON
     "eventId": 3
   }
 ]
+```
 
 **Error Handling:**
 Returns 400 for invalid queries.
@@ -355,10 +396,13 @@ GET /lookup/child/info?childId=all
 
 **Example Response:**
 ***specific Child***
+```
 {
   "child_name": "John Doe"
 }
+```
 ***All Children***
+```
 [
   {
     "child_id": 1,
@@ -370,6 +414,7 @@ GET /lookup/child/info?childId=all
   },
   ...
 ]
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the childId parameter is missing or invalid.
@@ -386,8 +431,9 @@ Returns 500 Internal Server Error for any server-side issues.
 /lookup/child/family?childId=1
 
 **Example Response:**
-JSON
+```
 [1, 2, 3]
+```
 
 **Error Handling:**
 Returns 400 for invalid queries.
@@ -403,18 +449,19 @@ Returns 500 for server errors.
 GET /lookup/child/activity?childId=2
 
 **Example Response:**
+```
 JSON
 
-[
-  {
-    "event_id": 3,
-    "date": Feb 24, 2024,
-    "time": 12:26 AM,
-    "location": "Park",
-    "staff_id": 1,
-    "family_id": 2
-  }
-]
+{
+  "event_id": 3,
+  "date": Feb 24, 2024,
+  "time": 12:26 AM,
+  "location": "Park",
+  "staff_id": 1,
+  "family_id": 2
+}
+
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the childId parameter is missing or invalid.
@@ -435,6 +482,7 @@ GET /lookup/staff/info?staffId=all
 
 **Example Response:**
 ***specific staff***
+```
 JSON
 {
   "name": "Jane Smith",
@@ -442,8 +490,10 @@ JSON
   "phone": "1234567890",
   "role": "Camp Counselor"
 }
+```
 
 ***all staff***
+```
 [
   {
     "staff_id": 1,
@@ -460,6 +510,7 @@ JSON
     "role": "Camp Counselor"
   }
 ]
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the staffId parameter is missing or invalid.
@@ -476,8 +527,9 @@ Returns 500 Internal Server Error for any server-side issues.
 GET /lookup/staff/event?staffId=1
 
 **Example Response:**
-JSON
+```
 [1, 2, 3]
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the staffId parameter is missing or invalid.
@@ -493,8 +545,9 @@ Returns 500 Internal Server Error for any server-side issues.
 GET /lookup/event?eventId=3
 
 **Example Response:**
-JSON
+```
 [1, 2, 3]
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the eventId parameter is missing or invalid.
@@ -515,6 +568,7 @@ GET /lookup/event/info?eventId=3
 
 **Example Response:**
 ***all Event***
+```
 [
   {
     "event_name": "event1",
@@ -529,17 +583,19 @@ GET /lookup/event/info?eventId=3
     "event_date": "2024-02-28"
   }
 ]
+```
 
 ***Single Event***
+```
 JSON
-[
-  {
-    "event_name": "event1",
-    "staff_id": 1,
-    "event_description": "Place holder",
-    "event_date": "2024-02-28"
-  }
-]
+{
+  "event_name": "event1",
+  "staff_id": 1,
+  "event_description": "Place holder",
+  "event_date": "2024-02-28"
+}
+
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the eventId parameter is missing or invalid.
@@ -556,17 +612,17 @@ GET /lookup/event/activity?eventId=2
 
 **Example Response:**
 JSON
+```
+{
+  "child_id": 3,
+  "date": Feb 24, 2024,
+  "time": 12:26 AM,
+  "location": "Park",
+  "staff_id": 1,
+  "family_id": 2
+}
 
-[
-  {
-    "child_id": 3,
-    "date": Feb 24, 2024,
-    "time": 12:26 AM,
-    "location": "Park",
-    "staff_id": 1,
-    "family_id": 2
-  }
-]
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the childId parameter is missing or invalid.
@@ -579,13 +635,14 @@ Returns 500 Internal Server Error for any server-side issues.
 **Request Type:** GET
 **Description:** Retrieves all bulletin messages, or messages made by a specific staff.
 **Example Request:**
-***All Events***
+***All Bulletin***
 /lookup/bulletin?staffId=all
 
-***Single Event***
+***Bulletin by a specific staff***
 /lookup/bulletin?staffId=1
 
 **Example Response:**
+```
 [
   {
     "bulletin_id": 3,
@@ -598,6 +655,7 @@ Returns 500 Internal Server Error for any server-side issues.
     "message": "this is a message"
   }
 ]
+```
 
 **Error Handling:**
 Returns 400 Bad Request if the staffId parameter is missing or invalid.
