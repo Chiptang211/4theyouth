@@ -31,11 +31,11 @@ function sortDaysOfWeek(days) {
 }
 
 function displayEventsByDay(day, events) {
-  const eventList = document.getElementById('event_day_list'); // Add things to the div under section in HTML
+  const eventList = document.getElementById('event_day_list');
   let daySection = document.querySelector(`#day-${day}`);
   if (!daySection) {
       daySection = document.createElement('div');
-      daySection.className = 'daily-agenda'; // So it works with your CSS
+      daySection.className = 'daily-agenda';
       daySection.id = `day-${day}`;
       daySection.innerHTML = `<h2>${day}</h2>`;
       eventList.appendChild(daySection);
@@ -44,13 +44,12 @@ function displayEventsByDay(day, events) {
   events.forEach(event => {
       const eventElement = document.createElement('div');
       eventElement.className = 'event day-div';
-      eventElement.textContent = event.event_name; // Only display the event name
+      const eventDate = new Date(event.event_date);
+      const formattedDate = `${eventDate.getMonth() + 1}-${eventDate.getDate()}`;
+      eventElement.textContent = `${event.event_name} (${formattedDate})`;
       daySection.appendChild(eventElement);
   });
 }
-
-
-
 
 
 

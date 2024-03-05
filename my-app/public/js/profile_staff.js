@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const userId = getQueryParam('id');
     fetchStaffInfo(userId);
+    fetchEventList(userId);
     fetchEventAndPopulateSelectors(userId);
     fetchBulletin(userId);
 

@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const userId = getQueryParam('id');
     fetchFamilyInfo(userId);
+    fetchChildrenList(userId);
     fetchChildrenAndPopulateSelectors(userId);
 
     document.getElementById('children_view').addEventListener('click', () => toggleView('children_box'));
