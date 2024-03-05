@@ -1,5 +1,5 @@
 # API Documentation
-##Last Updated Feb 29
+##Last Updated Mar 5
 
 ## Host this API server locally
 `cd ~/my-app`
@@ -15,7 +15,8 @@ install additional dependencies
 run node server
 
 base url local: "http://localhost:8000" + request
-Optional Tools
+
+### Optional Tools
 - Thunder Client in VS Code
 - DB Browser for SQLite
 
@@ -25,7 +26,7 @@ base url: "https://info442.chiptang.com" + request
 
 
 ## 1. Create Family
-- **Request URL:** /create/family
+- **Request URL:** `/create/family`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Description:** Adds a new family to the database, including guardian's name, email, phone number, and password.
@@ -33,9 +34,9 @@ base url: "https://info442.chiptang.com" + request
 ```
 JSON
 {
-  "name": "John Doe",
-  "email": "john.doe@example.com",
-  "phone": "1234567890",
+  "name": "Hung Tran",
+  "email": "hung@test.com",
+  "phone": "4251234321",
   "password": "password"
 }
 ```
@@ -44,7 +45,7 @@ JSON
 ```
 JSON
 {
-  "familyId": 1
+  "familyId": 2
 }
 ```
 
@@ -55,7 +56,7 @@ JSON
 
 
 ## 2. Family Login
-- **Request URL:** /login/family
+- **Request URL:** `/login/family`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Description:** Guardian Login with either email or phone as credential, and password.
@@ -63,10 +64,16 @@ JSON
 ```
 JSON
 {
-  "credential": "john.doe@example.com",
+  "credential": "hung@test.com",
+  "password": "password"
+}
+or
+{
+  "credential": "4251234321",
   "password": "password"
 }
 ```
+
 
 - **Example Response:**
 ```
@@ -84,7 +91,7 @@ JSON
 
 
 ## 3. Add Child to Family
-- **Request URL:** /addchild/family
+- **Request URL:** `/addchild/family`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Description:** Links a child with a family by inserting a new child and updating the family_link table.
@@ -92,9 +99,9 @@ JSON
 ```
 JSON
 {
-  "childName": "Jane Doe",
-  "familyId": 1,
-  "remarks": "Jane is allergic to cats"
+  "childName": "Daisy Tran",
+  "familyId": 2,
+  "remarks": "Lactose intolerant: No dairy products; lactose-free alternatives needed"
 }
 ```
 
@@ -102,17 +109,17 @@ JSON
 ```
 JSON
 {
-  "childId": 1
+  "childId": 4
 }
 ```
 
 - **Error Handling:**
-Returns 404 if family ID does not exist or data is missing.
-Returns 500 for internal errors.
+  - Returns 404 if family ID does not exist or data is missing.
+  - Returns 500 for internal errors.
 
 
 ## 4. Create Staff
-- **Request URL:** /create/staff
+- **Request URL:** `/create/staff`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Description:** Adds a new staff member to the database.
@@ -120,9 +127,9 @@ Returns 500 for internal errors.
 ```
 JSON
 {
-  "name": "Alice Smith",
-  "email": "alice.smith@example.com",
-  "phone": "0987654321",
+  "name": "Chip",
+  "email": "chip@test.com",
+  "phone": "2067654321",
   "password": "password",
   "role": "Camp Counselor"
 }
@@ -137,13 +144,13 @@ JSON
 ```
 
 - **Error Handling:**
-Returns 400 if required data is missing.
+  - Returns 400 if required data is missing.
   - Returns 404 if email or phone already exists.
   - Returns 500 for other errors.
 
 
 ## 5. Staff Login
-- **Request URL:** /login/staff
+- **Request URL:** `/login/staff`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Dcription:** Staff Login with either email or phone as credential, and password.
@@ -151,7 +158,12 @@ Returns 400 if required data is missing.
 ```
 JSON
 {
-  "credential": "john.doe@example.com",
+  "credential": "chip@test.com",
+  "password": "password"
+}
+or
+{
+  "credential": "2067654321",
   "password": "password"
 }
 ```
@@ -172,7 +184,7 @@ JSON
 
 
 ## 6. Create Event
-- **Request URL:** /create/event
+- **Request URL:** `/create/event`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Dcription:** Creates a new event and associates it with a staff member.
@@ -180,10 +192,10 @@ JSON
 ```
 JSON
 {
-  "name": "Summer Camp",
+  "name": "Wildlife Safari Day",
   "staffId": 1,
-  "description": "Summer Camp Description",
-  "date": "2024-02-28"
+  "description": "A day trip for campers aged 7-13 to the local wildlife park. Includes guided tours, animal encounters, and educational talks on conservation efforts. Don’t forget your binoculars!",
+  "date": "2024-03-04"
 }
 ```
 
@@ -191,7 +203,7 @@ JSON
 ```
 JSON
 {
-  "eventId": 1
+  "eventId": 10
 }
 ```
 
@@ -202,7 +214,7 @@ JSON
 
 
 ## 7. Add Child to Event
-- **Request URL:** /addchild/event
+- **Request URL:** `/addchild/event`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Dcription:** Links a child to an event.
@@ -210,8 +222,8 @@ JSON
 ```
 JSON
 {
-  "eventId": 1,
-  "childId": 1
+  "eventId": 10,
+  "childId": 7
 }
 ```
 
@@ -230,7 +242,7 @@ JSON
 
 
 ## 8. Check-in by Parent
-- **Request URL:** /checkin/byparent
+- **Request URL:** `/checkin/byparent`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Dcription:** Records a child's check-in to an event by a parent, including date, time, and location.
@@ -238,12 +250,12 @@ JSON
 ```
 JSON
 {
-  "childId": 1,
-  "eventId": 1,
-  "date": "20240217",
-  "time": "1000",
-  "location": "Main Hall",
-  "familyId": 1
+  "childId": 4,
+  "eventId": 15,
+  "date": "Feb 24, 2024",
+  "time": "9:31 AM",
+  "location": "Bus Pick Up",
+  "familyId": 2
 }
 ```
 
@@ -262,7 +274,7 @@ JSON
 
 
 ## 9. Check-in By Staff
-- **Request URL:** /checkin/bystaff
+- **Request URL:** `/checkin/bystaff`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Dcription:** Allows staff to check in a child for an event by submitting the necessary details.
@@ -270,10 +282,10 @@ JSON
 ```
 JSON
 {
-  "childId": 1,
-  "eventId": 2,
-  "date": 20230217,
-  "time": 1300,
+  "childId": 9,
+  "eventId": 10,
+  "date": "Feb 24, 2024",
+  "time": "9:26 AM",
   "location": "Playground",
   "staffId": 3
 }
@@ -289,7 +301,7 @@ JSON
 
 
 ## 10. Create Bulletin
-- **Request URL:** /create/bulletin
+- **Request URL:** `/create/bulletin`
 - **Request Format:** JSON
 - **Request Type:** POST
 - **Dcription:** Allows staff to post message on bulletin board.
@@ -298,7 +310,7 @@ JSON
 JSON
 {
     "staffId": 1,
-    "message": "this is a message"
+    "message": "Our camp will be hosting a Family Day this summer. Parents and siblings are invited to join us for a day of fun activities, performances, and a picnic lunch"
 }
 ```
 
@@ -312,16 +324,24 @@ JSON
 
 
 ## 11. Lookup Family's Children
-- **Request URL:** /lookup/family/child
+- **Request URL:** `/lookup/family/child`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves the IDs of all children associated with a given family ID.
 - **Example Request:**
-/lookup/family/child?familyId=1
+```
+GET
+/lookup/family/child?familyId=2
+```
 
 - **Example Response:**
 ```
-[1, 2, 3]
+[
+  4,
+  5,
+  6,
+  7
+]
 ```
 
 - **Error Handling:**
@@ -330,20 +350,23 @@ JSON
 
 
 ## 12. Lookup Family Info
-- **Request URL:** /lookup/family/info
+- **Request URL:** `/lookup/family/info`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves the information of a guardian based on the family ID.
 - **Example Request:**
-/lookup/family/info?familyId=1
+```
+GET
+/lookup/family/info?familyId=2
+```
 
 - **Example Response:**
 ```
 JSON
 {
-  "guardian_name": "John Doe",
-  "email": "john.doe@example.com",
-  "phone": "1234567890"
+  "guardian_name": "Hung Tran",
+  "email": "hung@test.com",
+  "phone": "4251234321"
 }
 ```
 
@@ -354,25 +377,35 @@ JSON
 
 
 ## 13. Lookup Child's Events
-- **Request URL:** /lookup/child/event
+- **Request URL:** `/lookup/child/event`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves all events a child is linked to.
 - **Example Request:**
-/lookup/child/event?childId=1
+```
+GET
+/lookup/child/event?childId=4
+```
 
 - **Example Response:**
 ```
 JSON
-
 [
   {
-    "event_name": "Art Class",
-    "eventId": 2
+    "event_name": "Junior Chef Cook-off",
+    "event_id": 4
   },
   {
-    "event_name": "Music Lesson",
-    "eventId": 3
+    "event_name": "Superhero Training Camp",
+    "event_id": 15
+  },
+  {
+    "event_name": "Robotics and Coding Camp",
+    "event_id": 5
+  },
+  {
+    "event_name": "Adventure Sports Day",
+    "event_id": 6
   }
 ]
 ```
@@ -383,34 +416,52 @@ JSON
 
 
 ## 14. Child Information Lookup
-- **Request URL:** /lookup/child/info
+- **Request URL:** `/lookup/child/info`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves information about children. This endpoint can be used to fetch the name of a specific child based on a provided child ID, or to retrieve names and IDs for all children when provided with a special value for childId.
 - **Example Request:**
   - ***specific Child***
-GET /lookup/child/info?childId=1
+```
+GET 
+/lookup/child/info?childId=4
+```
 
   - ***All Children***
-GET /lookup/child/info?childId=all
+```
+GET
+/lookup/child/info?childId=all
+```
 
 - **Example Response:**
   - ***specific Child***
 ```
 {
-  "child_name": "John Doe"
+  "child_name": "Daisy Tran",
+  "child_remarks": "Lactose intolerant: No dairy products; lactose-free alternatives needed."
 }
 ```
   - ***All Children***
 ```
-[
-  {
+{
     "child_id": 1,
-    "child_name": "John Doe"
+    "child_name": "Adam Baghdasaryan",
+    "child_remarks": "Allergic to peanuts: Carries EpiPen."
   },
   {
     "child_id": 2,
-    "child_name": "Jane Doe"
+    "child_name": "Bella Baghdasaryan",
+    "child_remarks": "Asthma: Uses an inhaler; avoid vigorous activities on high pollen days."
+  },
+  {
+    "child_id": 3,
+    "child_name": "Charlie Baghdasaryan",
+    "child_remarks": "Gluten intolerance: Requires gluten-free meals and snacks."
+  },
+  {
+    "child_id": 4,
+    "child_name": "Daisy Tran",
+    "child_remarks": "Lactose intolerant: No dairy products; lactose-free alternatives needed."
   },
   ...
 ]
@@ -423,16 +474,21 @@ GET /lookup/child/info?childId=all
 
 
 ## 15. Lookup Children's Family
-- **Request URL:** /lookup/child/family
+- **Request URL:** `/lookup/child/family`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves the IDs of all families associated with a given child ID.
 - **Example Request:**
-/lookup/child/family?childId=1
+```
+GET
+/lookup/child/family?childId=4
+```
 
 - **Example Response:**
 ```
-[1, 2, 3]
+[
+  2
+]
 ```
 
 - **Error Handling:**
@@ -441,25 +497,54 @@ GET /lookup/child/info?childId=all
 
 
 ## 16. Child Activity Lookup
-- **Request URL:** /lookup/child/activity
+- **Request URL:** `/lookup/child/activity`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves a list of activities for a specified child, including event ID, date, time, location, staff ID, and family ID.
 - **Example Request:**
-GET /lookup/child/activity?childId=2
+```
+GET
+/lookup/child/activity?childId=4
+```
 
 - **Example Response:**
 ```
 JSON
 
-{
-  "event_id": 3,
-  "date": Feb 24, 2024,
-  "time": 12:26 AM,
-  "location": "Park",
-  "staff_id": 1,
-  "family_id": 2
-}
+[
+  {
+    "event_id": 4,
+    "date": "Feb 24, 2024",
+    "time": "9:22 AM",
+    "location": "School",
+    "staff_id": 5,
+    "family_id": null
+  },
+  {
+    "event_id": 15,
+    "date": "Feb 24, 2024",
+    "time": "9:31 AM",
+    "location": "Bus",
+    "staff_id": 5,
+    "family_id": null
+  },
+  {
+    "event_id": 4,
+    "date": "Feb 24, 2024",
+    "time": "9:22 AM",
+    "location": "School Drop Off",
+    "staff_id": null,
+    "family_id": 2
+  },
+  {
+    "event_id": 15,
+    "date": "Feb 24, 2024",
+    "time": "9:31 AM",
+    "location": "Bus Pick Up",
+    "staff_id": null,
+    "family_id": 2
+  }
+]
 
 ```
 
@@ -469,25 +554,31 @@ JSON
 
 
 ## 17. Staff Information Lookup
-- **Request URL:** /lookup/staff/info
+- **Request URL:** `/lookup/staff/info`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves information about a specific staff member or all staff members from the database.
 - **Example Request:**
   - ***specific staff***
-GET /lookup/staff/info?staffId=1
+```
+GET
+/lookup/staff/info?staffId=1
+```
 
   - ***all staff***
-GET /lookup/staff/info?staffId=all
+```
+GET
+/lookup/staff/info?staffId=all
+```
 
 - **Example Response:**
   - ***specific staff***
 ```
 JSON
 {
-  "name": "Jane Smith",
-  "email": "jane@example.com",
-  "phone": "1234567890",
+  "name": "Chip",
+  "email": "chip@test.com",
+  "phone": 2067654321,
   "role": "Camp Counselor"
 }
 ```
@@ -497,18 +588,26 @@ JSON
 [
   {
     "staff_id": 1,
-    "name": "John Doe",
-    "email": "johndoe@example.com",
-    "phone": "123-456-7890",
+    "name": "Chip",
+    "email": "chip@test.com",
+    "phone": 2067654321,
     "role": "Camp Counselor"
   },
   {
     "staff_id": 2,
-    "name": "Jane Smith",
-    "email": "janesmith@example.com",
-    "phone": "098-765-4321",
+    "name": "Josh",
+    "email": "josh@test.com",
+    "phone": 4257654321,
     "role": "Camp Counselor"
-  }
+  },
+  {
+    "staff_id": 3,
+    "name": "Eric",
+    "email": "eric@test.com",
+    "phone": 3607654321,
+    "role": "Camp Counselor"
+  },
+  ...
 ]
 ```
 
@@ -519,16 +618,24 @@ JSON
 
 
 ## 18. Staff's Event Lookup
-- **Request URL:** /lookup/staff/event
+- **Request URL:** `/lookup/staff/event`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves a list of event IDs that a staff member is associated with, based on a provided staff ID.
 - **Example Request:**
-GET /lookup/staff/event?staffId=1
+```
+GET
+/lookup/staff/event?staffId=1
+```
 
 - **Example Response:**
 ```
-[1, 2, 3]
+[
+  10,
+  11,
+  21,
+  22
+]
 ```
 
 - **Error Handling:**
@@ -537,16 +644,23 @@ GET /lookup/staff/event?staffId=1
 
 
 ## 19. Event's Children Lookup
-- **Request URL:** /lookup/event/child
+- **Request URL:** `/lookup/event/child`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves a list of child IDs that are linked to a specified event, based on a provided event ID.
 - **Example Request:**
-GET /lookup/event?eventId=3
+```
+GET
+/lookup/event/child?eventId=10
+```
 
 - **Example Response:**
 ```
-[1, 2, 3]
+[
+  9,
+  8,
+  7
+]
 ```
 
 - **Error Handling:**
@@ -555,46 +669,57 @@ GET /lookup/event?eventId=3
 
 
 ## 20. Event's Info Lookup
-- **Request URL:** /lookup/event/info
+- **Request URL:** `/lookup/event/info`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves a list of event info, or a single event info based on a provided event ID.
 - **Example Request:**
-  - ***All Events***
-GET /lookup/event/info?eventId=all
-
   - ***Single Event***
-GET /lookup/event/info?eventId=3
+```
+GET
+/lookup/event/info?eventId=10
+```
+
+  - ***All Events***
+```
+GET
+/lookup/event/info?eventId=all
+```
 
 - **Example Response:**
-  - ***all Event***
+  - ***Specific Event***
+```
+JSON
+[
+  {
+    "event_name": "Wildlife Safari Day",
+    "staff_id": 1,
+    "event_description": "A day trip for campers aged 7-13 to the local wildlife park. Includes guided tours, animal encounters, and educational talks on conservation efforts. Don’t forget your binoculars!",
+    "event_date": "2024-03-04"
+  }
+]
+
+```
+
+  - ***all Events***
 ```
 [
   {
-    "event_name": "event1",
+    "event_id": 22,
+    "event_name": "Inventors and Makers Camp",
     "staff_id": 1,
-    "event_description": "Place holder",
-    "event_date": "2024-02-28"
-  }
+    "event_description": "Designed for curious minds aged 9-15, this camp encourages innovation through science experiments, engineering challenges, and DIY projects, with a showcase of inventions at the end of the session.",
+    "event_date": "2024-03-12"
+  },
   {
-    "event_name": "event2",
-    "staff_id": 1,
-    "event_description": "Place holder",
-    "event_date": "2024-02-28"
-  }
+    "event_id": 20,
+    "event_name": "Staff Meeting",
+    "staff_id": 6,
+    "event_description": "Staff Meeting: Week 2 of March",
+    "event_date": "2024-03-11"
+  },
+  ...
 ]
-```
-
-  - ***Single Event***
-```
-JSON
-{
-  "event_name": "event1",
-  "staff_id": 1,
-  "event_description": "Place holder",
-  "event_date": "2024-02-28"
-}
-
 ```
 
 - **Error Handling:**
@@ -603,25 +728,37 @@ JSON
 
 
 ## 21. Event Activity Lookup
-- **Request URL:** /lookup/event/activity
+- **Request URL:** `/lookup/event/activity`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves a list of activities for a specified event, including child ID, date, time, location, staff ID, and family ID.
 - **Example Request:**
-GET /lookup/event/activity?eventId=2
+```
+GET
+/lookup/event/activity?eventId=10
+```
 
 - **Example Response:**
 JSON
 ```
-{
-  "child_id": 3,
-  "date": Feb 24, 2024,
-  "time": 12:26 AM,
-  "location": "Park",
-  "staff_id": 1,
-  "family_id": 2
-}
-
+[
+  {
+    "child_id": 9,
+    "date": "Feb 24, 2024",
+    "time": "9:26 AM",
+    "location": "Bus",
+    "staff_id": 1,
+    "family_id": null
+  },
+  {
+    "child_id": 9,
+    "date": "Feb 24, 2024",
+    "time": "9:26 AM",
+    "location": "Bus Pick Up",
+    "staff_id": null,
+    "family_id": 3
+  }
+]
 ```
 
 - **Error Handling:**
@@ -630,30 +767,59 @@ JSON
 
 
 ## 22. Bulletin Message Lookup
-- **Request URL:** /lookup/bulletin
+- **Request URL:** `/lookup/bulletin`
 - **Request Format:** Query Parameters
 - **Request Type:** GET
 - **Dcription:** Retrieves all bulletin messages, or messages made by a specific staff.
 - **Example Request:**
-  - ***All Bulletin***
-/lookup/bulletin?staffId=all
-
   - ***Bulletin by a specific staff***
+```
+GET
 /lookup/bulletin?staffId=1
+```
+
+  - ***All Bulletins***
+```
+GET
+/lookup/bulletin?staffId=all
+```
 
 - **Example Response:**
+  - ***Bulletin(s) by a specific staff***
 ```
 [
   {
-    "bulletin_id": 3,
+    "bulletin_id": 2,
     "staff_id": 1,
-    "message": "this is a message"
+    "message": "Our camp will be hosting a Family Day this summer. Parents and siblings are invited to join us for a day of fun activities, performances, and a picnic lunch."
   },
   {
     "bulletin_id": 1,
     "staff_id": 1,
-    "message": "this is a message"
+    "message": "Attention all camp staff and parents: Due to the forecasted rain tomorrow, all outdoor activities will be moved indoors. Please ensure children come prepared with appropriate indoor shoes and activities. We appreciate your cooperation and look forward to a fun-filled day indoors!"
   }
+]
+```
+
+  - ***All Bulletins***
+```
+[
+  {
+    "bulletin_id": 4,
+    "staff_id": 3,
+    "message": "We're looking for enthusiastic volunteers to help with our upcoming camp carnival! If you're interested in helping out with games, food stations, or setup and cleanup. Volunteers make our events possible, and we'd love to have you join our team for this exciting event."
+  },
+  {
+    "bulletin_id": 3,
+    "staff_id": 2,
+    "message": "A friendly reminder to all campers and staff: if you've lost any personal items, please check our Lost and Found located at the camp office. We currently have several unclaimed items, including water bottles, hats, and a pair of glasses. Items not claimed by the end of the month will be donated to a local charity."
+  },
+  {
+    "bulletin_id": 2,
+    "staff_id": 1,
+    "message": "Our camp will be hosting a Family Day this summer. Parents and siblings are invited to join us for a day of fun activities, performances, and a picnic lunch."
+  },
+  ...
 ]
 ```
 
