@@ -1,6 +1,8 @@
-4theYouth User Personas
+# 4theYouth User Personas
 
-User 1: Josh - Youth Center Staff Member
+## User 1: Staff
+### Josh - Youth Center Staff Member
+
 Josh is a camp counselor at the youth center. He logs into the website as a staff member and is greeted 
 with the home page featuring the staff's weekly agenda and bulletin board. He sees on the agenda that 
 he will be hosting Space Explorers Academy and Young Astronomers Night on the same day, so he plans to
@@ -10,7 +12,9 @@ help out. He then uses Chip's listed email address to contact Chip and ask him f
 day of his events. Using the scheduling information from 4theYouth's website, Josh was able to plan
 and prepare for his events for the upcoming days.
 
-User 2: Jane - Parent to Youth Center Child Attendee
+## User 2: Family
+### Jane - Parent to Youth Center Child Attendee
+
 Jane is the mother of a child attending the youth center. She logs into the website as a parent and reads
 the staff bulletin board on the website's home page. She sees a notice about lost items being transported to
 the office's lost and found, and remembers that her son recently lost his water bottle at camp. She clicks on
